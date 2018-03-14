@@ -71,7 +71,7 @@ COPY --from=builder \
         /usr/local/bin/bootnode \
     /usr/local/bin/
 
-EXPOSE 22001 21001 9001
+EXPOSE 22000 21000 9000
 
 CMD ["/qdata/start-node.sh"]
 
