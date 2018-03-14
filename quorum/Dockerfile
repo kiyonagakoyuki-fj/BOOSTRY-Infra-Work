@@ -40,7 +40,7 @@ RUN git clone https://github.com/jpmorganchase/quorum.git && \
     cd .. && \
     rm -rf quorum
 
-### Create the runtime image, leaving most of the cruft behind (hopefully...)
+
 
 FROM ubuntu:16.04
 
@@ -62,9 +62,6 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Temporary useful tools
-#RUN apt-get update && \
-#        apt-get install -y iputils-ping net-tools vim
-
 COPY --from=builder \
         /usr/local/bin/constellation-node \
         /usr/local/bin/geth \
