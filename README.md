@@ -45,6 +45,12 @@ git clone https://github.com/N-Village/tmr-docker
 
 ## 1.4 quorumインストール
 ### 1.4.1 docker image作成
+```
+cd tmr-docker/quorum
+docker build -t quorum .
+```
+
+### 1.4.2 quorum設定
 
 
 
