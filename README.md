@@ -60,7 +60,35 @@ docker build -t quorum .
 docker exec -it quorum geth attach qdata/dd/geth.ipc
 ```
 
-# 2. 【発行体ノード】環境構築（Ubuntu 16.04）
+# 2. 【発行体 & APPノード】PostgreSQL
+## 2.1 PostgreSQLコンテナ起動
+```
+cd /home/ubuntu/
+mkdir postgresql_data
+docker run -d --name postgres -p 5432:5432 -v ~/postgresql_data:/var/lib/postgresql/data postgres:9.6
+```
+## 2.2 DB作成
+
+```
+# DB接続
+docker run -it --rm --link postgres:postgres postgres:9.6 psql -h postgres -U postgres
+
+# role, db作成
+postgres=# CREATE ROLE apluser LOGIN CREATEDB PASSWORD 'apluserpass';
+postgres=# CREATE DATABASE apldb OWNER apluser;
+postgres=# \l
+                                 List of databases
+   Name    |  Owner   | Encoding |  Collate   |   Ctype    |   Access privileges
+-----------+----------+----------+------------+------------+-----------------------
+ apldb     | apluser  | UTF8     | en_US.utf8 | en_US.utf8 |
+ postgres  | postgres | UTF8     | en_US.utf8 | en_US.utf8 |
+ template0 | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres          +
+           |          |          |            |            | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres          +
+           |          |          |            |            | postgres=CTc/postgres
+(4 rows)
+```
+
 
 ## 2.1 nginxコンテナ
 
