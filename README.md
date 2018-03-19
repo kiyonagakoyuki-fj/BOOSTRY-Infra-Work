@@ -31,7 +31,7 @@ su - $USER
 ```
 ※passwordがない環境の場合は、再度ログイン。
 
-## 1.2 docker-composeインストール
+## 1.2 docker-composeインストール (現時点で未使用のため、実施しなくていい)
 ```
 sudo curl -L "https://github.com/docker/compose/releases/download/1.19.0/docker-compose-Linux-x86_64" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
