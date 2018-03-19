@@ -13,9 +13,9 @@ fi
 
 # datadirの初期化
 sudo rm -rf qdata
-mkdir qdata/{logs,keys}
-mkdir qdata/dd/geth
-mkdir qdata/dd/keystore
+mkdir -p qdata/{logs,keys}
+mkdir -p qdata/dd/geth
+mkdir -p qdata/dd/keystore
 
 
 # 変数
