@@ -22,7 +22,6 @@ RUN wget -q https://github.com/jpmorganchase/constellation/releases/download/v0.
     chmod 755 /usr/local/bin/constellation-node && \
     rm -rf constellation-0.3.2-ubuntu1604*
 
-
 ENV GOREL go1.7.3.linux-amd64.tar.gz
 ENV PATH $PATH:/usr/local/go/bin
 
@@ -68,7 +67,7 @@ COPY --from=builder \
         /usr/local/bin/bootnode \
     /usr/local/bin/
 
-EXPOSE 22000 21000 9000
+EXPOSE 8545 21000 9000
 
 CMD ["/qdata/start-node.sh"]
 

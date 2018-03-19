@@ -43,6 +43,11 @@ docker-compose -v
 git clone https://github.com/N-Village/tmr-docker
 ```
 
+## 1.4 quorumインストール
+### 1.4.1 docker image作成
+
+
+
 
 
 # 2. 【発行体ノード】環境構築（Ubuntu 16.04）
