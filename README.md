@@ -43,7 +43,7 @@ docker-compose -v
 git clone https://github.com/N-Village/tmr-docker
 ```
 
-## 1.4 quorumインストール
+## 1.4 quorumコンテナ
 ### 1.4.1 docker image作成
 ```
 cd tmr-docker/quorum
@@ -68,7 +68,6 @@ mkdir postgresql_data
 docker run -d --name postgres -p 5432:5432 -v ~/postgresql_data:/var/lib/postgresql/data postgres:9.6
 ```
 ## 2.2 DB作成
-
 ```
 # DB接続
 docker run -it --rm --link postgres:postgres postgres:9.6 psql -h postgres -U postgres
@@ -88,6 +87,74 @@ postgres=# \l
            |          |          |            |            | postgres=CTc/postgres
 (4 rows)
 ```
+
+# 3. 【発行体】アプリインストール
+## 3.1 issuerコンテナ
+### 3.1.1 docker image作成
+```
+cd /home/ubuntu/tmr-docker/issuer
+
+# 必要なソースを取得
+git clone https://github.com/N-Village/tmr-issuer.git
+git clone https://github.com/pyenv/pyenv.git
+git clone https://github.com/ethereum/pyethereum/
+rm pyethereum/.python-version
+
+# docker build
+docker build -t issuer .
+```
+
+### 3.1.2 quorum, postgresqlのIPアドレス取得
+```
+docker inspect quorum | grep IPAddress
+docker inspect postgres | grep IPAddress
+```
+
+### 3.1.3 migrate
+```
+# issuerコンテナに接続
+docker run -it --rm -e DEV_DATABASE_URL=postgresql://apluser:apluserpass@<PostgreSQLコンテナのIP>:5432/apldb -e WEB3_HTTP_PROVIDER=http://<quorumコンテナのIP>:8545  issuer bash
+
+# ↓をコンテナ内で実施
+source ~/.bash_profile
+cd /app/tmr-issuer
+python manage.py db init
+python manage.py db migrate
+python manage.py db upgrade
+python manage.py shell
+
+# shellで実施
+roles = ['admin', 'user',]
+for r in roles:
+    role = Role.query.filter_by(name=r).first()
+    if role is None:
+        role = Role(name=r)
+    db.session.add(role)
+
+users = [
+     {'login_id': 'admin', 'user_name': '管理者', 'role_id': 1, 'password': 'admin'},
+]
+
+for u_dict in users:
+    user = User.query.filter_by(login_id=u_dict['login_id']).first()
+    if user is None:
+        user = User()
+        for key, value in u_dict.items():
+            setattr(user, key, value)
+        db.session.add(user)
+
+db.session.commit()
+```
+### 3.1.4 コンテナ起動
+```
+docker run -it --rm -d --name issuer -e DEV_DATABASE_URL=postgresql://apluser:apluserpass@<PostgreSQLコンテナのIP>:5432/apldb \
+                                     -e WEB3_HTTP_PROVIDER=http://<quorumコンテナのIP>:8545 \
+                                     -e ETH_ACCOUNT_PASSWORD=nvillage201803+ \
+                                     -p 5000:5000 issuer
+
+
+```
+
 
 
 ## 2.1 nginxコンテナ
