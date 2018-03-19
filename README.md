@@ -50,11 +50,15 @@ cd tmr-docker/quorum
 docker build -t quorum .
 ```
 
-### 1.4.2 quorum設定
+### 1.4.2 quorum設定・起動
+ノード稼動環境のIPアドレスに合わせて、「tmconf/tmA～D.conf」、「static-nodes.json」のIPアドレスを修正する。
+修正後、下記コマンドを実行。引数はノードA~Dで変更する。
+```
+./quorum-init.sh A
 
-
-
-
+# 稼動確認
+docker logs -f quorum
+```
 
 # 2. 【発行体ノード】環境構築（Ubuntu 16.04）
 
