@@ -57,7 +57,7 @@ docker build -t quorum .
 ./quorum-init.sh A
 
 # 稼動確認
-docker logs -f quorum
+docker exec -it quorum geth attach qdata/dd/geth.ipc
 ```
 
 # 2. 【発行体ノード】環境構築（Ubuntu 16.04）
