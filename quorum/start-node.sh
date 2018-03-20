@@ -18,4 +18,4 @@ sleep 10
 
 echo "[*] Starting node"
 GLOBAL_ARGS='--datadir /qdata/dd --rpc --rpccorsdomain "*" --rpcaddr 0.0.0.0 --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum,istanbul,rpc --permissioned --rpcport 8545 --port 21000'
-PRIVATE_CONFIG=$TMCONF /usr/local/bin/geth $GLOBAL_ARGS 
+PRIVATE_CONFIG=$TMCONF /usr/local/bin/geth $GLOBAL_ARGS --unlock 0 --password /qdata/pass.txt
