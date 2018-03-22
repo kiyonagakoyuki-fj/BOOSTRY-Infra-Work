@@ -72,7 +72,7 @@ cd /home/ubuntu/gowork/src/github.com/getamis/istanbul-tools
 tail -f qdata/logs/geth.log
 ```
 
-### 1.4.4 account作成（A(発行体)、C・D（サトシナカモトノード）
+### 1.4.4 account作成・・・A(発行体ノード)、C・D（サトシナカモトノード）で実施
 ```
 ./quorum-create-account.sh
 ```
