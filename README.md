@@ -209,7 +209,41 @@ docker run -it --rm -d --name issuer --link postgres:postgres \
 # 4. 【API】残りの環境構築
 ## 4.1 APIコンテナ
 ### 4.1.1 docker image作成
+```
+cd /home/ubuntu/tmr-docker/api
 
+# 必要なソースを取得
+git clone https://github.com/N-Village/tmr-node.git
+git clone https://github.com/pyenv/pyenv.git
+git clone https://github.com/ethereum/pyethereum/
+rm pyethereum/.python-version
+
+# docker build
+docker build -t api .
+```
+
+### 4.1.2 APIコンテナ起動
+```
+docker run -it --rm -d --name api --link postgres:postgres \
+                                     --link quorum:quorum \
+                                     -e APP_ENV=live \
+                                     -e TOKEN_LIST_CONTRACT_ADDRESS=<contractアドレス> \
+                                     -e PERSONAL_INFO_CONTRACT_ADDRESS=<contractアドレス> \
+                                     -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=<contractアドレス> \
+                                     -e WHITE_LIST_CONTRACT_ADDRESS=<contractアドレス> \
+                                     -p 5000:5000 api
+```
+POC用の場合
+```
+docker run -it --rm -d --name api --link postgres:postgres \
+                                     --link quorum:quorum \
+                                     -e APP_ENV=live \
+                                     -e TOKEN_LIST_CONTRACT_ADDRESS=0xce28b77c2f0f375e9421d41a34981e0a2684f4a1 \
+                                     -e PERSONAL_INFO_CONTRACT_ADDRESS=0x82933ff0383d41a1cfbcd19ec5a11abd26cf22c2 \
+                                     -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x004a0e9ad2eabf72eb403febbb1dc8ccee6969e3 \
+                                     -e WHITE_LIST_CONTRACT_ADDRESS=0xa22a31b2734eabcb075d185ffc159329c23909e1 \
+                                     -p 5000:5000 api
+```
 
 
 
