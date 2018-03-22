@@ -43,6 +43,3 @@ docker run --rm -d --name quorum -v $pwd/qdata:/qdata quorum /usr/local/bin/geth
 
 # 10秒待つ
 sleep 10
-
-# geth 起動
-docker run --rm -d --name quorum -v $pwd/qdata:/qdata -p 9000:9000 -p 21000:21000 -p 21000:21000/udp -p 8545:8545 quorum
