@@ -93,7 +93,7 @@ eth.contract('0xce28b77c2f0f375e9421d41a34981e0a2684f4a1')
 ```
 
 
-# 2. 【発行体 & APPノード】PostgreSQL
+# 2. 【発行体 & API】PostgreSQL構築
 ## 2.1 PostgreSQLコンテナ起動
 ```
 cd /home/ubuntu/
@@ -121,7 +121,7 @@ postgres=# \l
 (4 rows)
 ```
 
-# 3. 【発行体】アプリインストール
+# 3. 【発行体】残りの環境構築
 ## 3.1 issuerコンテナ
 ### 3.1.1 docker image作成
 ```
@@ -137,16 +137,12 @@ rm pyethereum/.python-version
 docker build -t issuer .
 ```
 
-### 3.1.2 quorum, postgresqlのIPアドレス取得
-```
-docker inspect quorum | grep IPAddress
-docker inspect postgres | grep IPAddress
-```
-
-### 3.1.3 migrate
+### 3.1.2 migrate
 ```
 # issuerコンテナに接続
-docker run -it --rm -e DEV_DATABASE_URL=postgresql://apluser:apluserpass@<PostgreSQLコンテナのIP>:5432/apldb -e WEB3_HTTP_PROVIDER=http://<quorumコンテナのIP>:8545  issuer bash
+docker run -it --rm --link postgres:postgres  --link quorum:quorum \
+                    -e DEV_DATABASE_URL=postgresql://apluser:apluserpass@postgres:5432/apldb \
+                    -e WEB3_HTTP_PROVIDER=http://quorum:8545  issuer bash
 
 # ↓をコンテナ内で実施
 source ~/.bash_profile
@@ -178,24 +174,42 @@ for u_dict in users:
 
 db.session.commit()
 ```
-### 3.1.4 コンテナ起動
+### 3.1.3 issuerコンテナ起動
 ```
-docker run -it --rm -d --name issuer -e DEV_DATABASE_URL=postgresql://apluser:apluserpass@<PostgreSQLコンテナのIP>:5432/apldb \
-                                     -e WEB3_HTTP_PROVIDER=http://<quorumコンテナのIP>:8545 \
-                                     -e ETH_ACCOUNT=<ETHアカウント> \
+docker run -it --rm -d --name issuer --link postgres:postgres \
+                                     --link quorum:quorum \
+                                     -e FLASK_CONFIG=production \
+                                     -e DATABASE_URL=postgresql://apluser:apluserpass@postgres:5432/apldb \
+                                     -e WEB3_HTTP_PROVIDER=http://quorum:8545 \
                                      -e ETH_ACCOUNT_PASSWORD=nvillage201803+ \
                                      -e TOKEN_LIST_CONTRACT_ADDRESS=<contractアドレス> \
                                      -e PERSONAL_INFO_CONTRACT_ADDRESS=<contractアドレス> \
                                      -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=<contractアドレス> \
                                      -e AGENT_ADDRESS=<決済業者のアドレス> \
                                      -p 5000:5000 issuer
-
+```
+POC用の場合
+```
+docker run -it --rm -d --name issuer --link postgres:postgres \
+                                     --link quorum:quorum \
+                                     -e FLASK_CONFIG=production \
+                                     -e DATABASE_URL=postgresql://apluser:apluserpass@postgres:5432/apldb \
+                                     -e WEB3_HTTP_PROVIDER=http://quorum:8545 \
+                                     -e ETH_ACCOUNT_PASSWORD=nvillage201803+ \
+                                     -e TOKEN_LIST_CONTRACT_ADDRESS=0xce28b77c2f0f375e9421d41a34981e0a2684f4a1 \
+                                     -e PERSONAL_INFO_CONTRACT_ADDRESS=0x82933ff0383d41a1cfbcd19ec5a11abd26cf22c2 \
+                                     -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x004a0e9ad2eabf72eb403febbb1dc8ccee6969e3 \
+                                     -e AGENT_ADDRESS=40d3cad73aedf8770625fe2e4528b724b55f2ac8 \
+                                     -p 5000:5000 issuer
 
 ```
+## 3.2 nginxコンテナ
+※TODO
 
+# 4. 【API】残りの環境構築
+## 4.1 APIコンテナ
+### 4.1.1 docker image作成
 
-
-## 2.1 nginxコンテナ
 
 
 
