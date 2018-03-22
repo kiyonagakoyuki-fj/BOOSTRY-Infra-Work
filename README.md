@@ -206,6 +206,19 @@ docker run -it --rm -d --name issuer --link postgres:postgres \
 ## 3.2 nginxコンテナ
 ※TODO
 
+## 3.3 issuerコンテナ更新手順
+```
+# ソース更新
+cd /home/ubuntu/tmr-docker/issuer/tmr-issuer
+git pull
+
+# コンテナ停止
+docker stop issuer
+# docker image削除
+docker rmi issuer
+```
+上記後、docker build & docker run
+
 # 4. 【API】残りの環境構築
 ## 4.1 APIコンテナ
 ### 4.1.1 docker image作成
@@ -247,5 +260,17 @@ docker run -it --rm -d --name api --link postgres:postgres \
 ## 4.2 nginxコンテナ
 ※TODO
 
+## 4.3 APIコンテナ更新手順
+```
+# ソース更新
+cd /home/ubuntu/tmr-docker/api/tmr-node
+git pull
+
+# コンテナ停止
+docker stop api
+# docker image削除
+docker rmi api
+```
+上記後、docker build & docker run
 
 
