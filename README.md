@@ -72,6 +72,14 @@ cd /home/ubuntu/gowork/src/github.com/getamis/istanbul-tools
 tail -f qdata/logs/geth.log
 ```
 
+### 1.4.4 account作成（A(発行体)、C・D（サトシナカモトノード）
+```
+./quorum-create-account.sh
+```
+出力されたアカウントを控える
+
+
+
 # 2. 【発行体 & APPノード】PostgreSQL
 ## 2.1 PostgreSQLコンテナ起動
 ```
