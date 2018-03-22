@@ -17,5 +17,5 @@ nohup /usr/local/bin/constellation-node $TMCONF 2>> /qdata/logs/constellation.lo
 sleep 10
 
 echo "[*] Starting node"
-GLOBAL_ARGS='--syncmode full --mine --rpc --rpcaddr 0.0.0.0 --rpccorsdomain "*" --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum,istanbul'
+GLOBAL_ARGS='--syncmode full --mine --rpc --rpcaddr 0.0.0.0 --rpccorsdomain * --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum,istanbul'
 PRIVATE_CONFIG=$TMCONF /usr/local/bin/geth --datadir /qdata/dd $GLOBAL_ARGS --permissioned --rpcport 8545 --port 21000 2>> /qdata/logs/geth.log
