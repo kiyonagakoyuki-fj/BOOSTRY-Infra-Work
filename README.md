@@ -244,6 +244,8 @@ docker run -it --rm -d --name api --link postgres:postgres \
                                      -e WHITE_LIST_CONTRACT_ADDRESS=0xa22a31b2734eabcb075d185ffc159329c23909e1 \
                                      -p 5000:5000 api
 ```
+## 4.2 nginxコンテナ
+※TODO
 
 
 
