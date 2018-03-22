@@ -1,0 +1,77 @@
+07:38:12 [INFO] Log level is LevelWarn
+07:38:12 [WARN] /qdata/keys/tm.key is too accessible. Please run: chmod 0600 /qdata/keys/tm.key
+07:38:12 [WARN] Synchronization failed: HttpExceptionRequest Request {
+  host                 = "10.0.0.90"
+  port                 = 9000
+  secure               = False
+  requestHeaders       = []
+  path                 = "/partyinfo"
+  queryString          = ""
+  method               = "POST"
+  proxy                = Nothing
+  rawBody              = False
+  redirectCount        = 10
+  responseTimeout      = ResponseTimeoutDefault
+  requestVersion       = HTTP/1.1
+}
+ (ConnectionFailure Network.Socket.connect: <socket: 17>: does not exist (Connection refused))
+07:38:13 [WARN] Synchronization failed: HttpExceptionRequest Request {
+  host                 = "10.0.0.90"
+  port                 = 9000
+  secure               = False
+  requestHeaders       = []
+  path                 = "/partyinfo"
+  queryString          = ""
+  method               = "POST"
+  proxy                = Nothing
+  rawBody              = False
+  redirectCount        = 10
+  responseTimeout      = ResponseTimeoutDefault
+  requestVersion       = HTTP/1.1
+}
+ (ConnectionFailure Network.Socket.connect: <socket: 17>: does not exist (Connection refused))
+07:38:14 [WARN] Synchronization failed: HttpExceptionRequest Request {
+  host                 = "10.0.0.90"
+  port                 = 9000
+  secure               = False
+  requestHeaders       = []
+  path                 = "/partyinfo"
+  queryString          = ""
+  method               = "POST"
+  proxy                = Nothing
+  rawBody              = False
+  redirectCount        = 10
+  responseTimeout      = ResponseTimeoutDefault
+  requestVersion       = HTTP/1.1
+}
+ (ConnectionFailure Network.Socket.connect: <socket: 17>: does not exist (Connection refused))
+07:38:15 [WARN] Synchronization failed: HttpExceptionRequest Request {
+  host                 = "10.0.0.90"
+  port                 = 9000
+  secure               = False
+  requestHeaders       = []
+  path                 = "/partyinfo"
+  queryString          = ""
+  method               = "POST"
+  proxy                = Nothing
+  rawBody              = False
+  redirectCount        = 10
+  responseTimeout      = ResponseTimeoutDefault
+  requestVersion       = HTTP/1.1
+}
+ (ConnectionFailure Network.Socket.connect: <socket: 17>: does not exist (Connection refused))
+07:38:16 [WARN] Synchronization failed: HttpExceptionRequest Request {
+  host                 = "10.0.0.90"
+  port                 = 9000
+  secure               = False
+  requestHeaders       = []
+  path                 = "/partyinfo"
+  queryString          = ""
+  method               = "POST"
+  proxy                = Nothing
+  rawBody              = False
+  redirectCount        = 10
+  responseTimeout      = ResponseTimeoutDefault
+  requestVersion       = HTTP/1.1
+}
+ (ConnectionFailure Network.Socket.connect: <socket: 17>: does not exist (Connection refused))
