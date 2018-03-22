@@ -79,6 +79,19 @@ tail -f qdata/logs/geth.log
 出力されたアカウントを控える
 
 
+### 1.4.5 コントラクトの登録
+サトシナカモトノードをアンロックし、remixからコントラクトを登録
+```
+# gethにattach
+docker exec -it quorum geth attach qdata/dd/geth.ipc
+
+# アンロック
+personal.unlockAccount(eth.accounts[0], "nvillage201803+", 0)
+
+# 登録後のコントラクト確認
+eth.contract('0xce28b77c2f0f375e9421d41a34981e0a2684f4a1')
+```
+
 
 # 2. 【発行体 & APPノード】PostgreSQL
 ## 2.1 PostgreSQLコンテナ起動
@@ -169,7 +182,12 @@ db.session.commit()
 ```
 docker run -it --rm -d --name issuer -e DEV_DATABASE_URL=postgresql://apluser:apluserpass@<PostgreSQLコンテナのIP>:5432/apldb \
                                      -e WEB3_HTTP_PROVIDER=http://<quorumコンテナのIP>:8545 \
+                                     -e ETH_ACCOUNT=<ETHアカウント> \
                                      -e ETH_ACCOUNT_PASSWORD=nvillage201803+ \
+                                     -e TOKEN_LIST_CONTRACT_ADDRESS=<contractアドレス> \
+                                     -e PERSONAL_INFO_CONTRACT_ADDRESS=<contractアドレス> \
+                                     -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=<contractアドレス> \
+                                     -e AGENT_ADDRESS=<決済業者のアドレス> \
                                      -p 5000:5000 issuer
 
 
