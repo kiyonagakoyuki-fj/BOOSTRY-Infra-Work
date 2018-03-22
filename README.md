@@ -56,7 +56,7 @@ docker build -t quorum .
 ※Goが必要
 ```
 cd /home/ubuntu/gowork/src/github.com/getamis/istanbul-tools
-./build/bin/istanbul setup --num 4 --nodes --verbose
+./build/bin/istanbul setup --num 4 --nodes --verbose --quorum
 ```
 
 
@@ -68,7 +68,7 @@ cd /home/ubuntu/gowork/src/github.com/getamis/istanbul-tools
 ./quorum-start.sh
 
 # 稼動確認
-docker exec -it quorum geth attach qdata/dd/geth.ipc
+tail -f qdata/logs/geth.log
 ```
 
 # 2. 【発行体 & APPノード】PostgreSQL
