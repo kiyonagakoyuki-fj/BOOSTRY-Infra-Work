@@ -41,5 +41,5 @@ cp start-node.sh qdata/start-node.sh
 # geth init
 docker run --rm -d --name quorum -v $pwd/qdata:/qdata quorum /usr/local/bin/geth --datadir /qdata/dd init /qdata/genesis.json
 
-# 10秒待つ
-sleep 10
+# 5秒待つ
+sleep 5

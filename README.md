@@ -55,6 +55,7 @@ docker build -t quorum .
 修正後、下記コマンドを実行。引数はノードA~Dで変更する。
 ```
 ./quorum-init.sh A
+./quorum-start.sh
 
 # 稼動確認
 docker exec -it quorum geth attach qdata/dd/geth.ipc
