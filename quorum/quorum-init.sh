@@ -39,7 +39,7 @@ cp keys/tm${node_label}.pub qdata/keys/tm.pub
 cp start-node.sh qdata/start-node.sh
 
 # geth init
-docker run --rm -d --name quorum -v $pwd/qdata:/qdata quorum /usr/local/bin/geth --datadir /qdata/dd init /qdata/genesis.json
+docker run --rm --name quorum -v $pwd/qdata:/qdata quorum /usr/local/bin/geth --datadir /qdata/dd init /qdata/genesis.json
 
 # 5秒待つ
 sleep 5
