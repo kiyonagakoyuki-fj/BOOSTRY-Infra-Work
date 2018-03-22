@@ -31,7 +31,7 @@ cp pass.txt qdata/pass.txt
 
 # key copy
 cp keys/nodekey${node_label} qdata/dd/geth/nodekey
-cp keys/key${node_label}.json qdata/dd/keystore/acckey
+#cp keys/key${node_label}.json qdata/dd/keystore/acckey
 cp keys/tm${node_label}.key qdata/keys/tm.key
 cp keys/tm${node_label}.pub qdata/keys/tm.pub
 

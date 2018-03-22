@@ -1,7 +1,0 @@
-vanity = "0x00"
-validators = [
-"0xbc75777d5790ea75e9a3343d40a558fca748be2a",
-"0xd1d10f0fe599e400090615109714f6b9ab4bbb86",
-"0x71e49e024ce4338548fe2e1057b2fa62df692c52",
-"0xbcb4aa02b5bdd5424d28f0b1cbade34deac7a598"
-]

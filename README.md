@@ -50,7 +50,17 @@ cd tmr-docker/quorum
 docker build -t quorum .
 ```
 
-### 1.4.2 quorum設定・起動
+### 1.4.2 istanbul用ノードの設定
+初期ノードの設定を新規で行う場合は、istanbul-toolsを入れてノード生成処理を実施する。
+ソース：https://github.com/getamis/istanbul-tools
+※Goが必要
+```
+cd /home/ubuntu/gowork/src/github.com/getamis/istanbul-tools
+./build/bin/istanbul setup --num 4 --nodes --verbose
+```
+
+
+### 1.4.3 quorum設定・起動
 ノード稼動環境のIPアドレスに合わせて、「tmconf/tmA～D.conf」、「static-nodes.json」のIPアドレスを修正する。
 修正後、下記コマンドを実行。引数はノードA~Dで変更する。
 ```
