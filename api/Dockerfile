@@ -27,6 +27,8 @@ RUN apt-get update -q \
  pkg-config \
  libtool \
  libgmp-dev \
+ language-pack-ja-base \
+ language-pack-ja \
  libyaml-cpp-dev && \
  apt-get install -y software-properties-common && \
  add-apt-repository -y ppa:ethereum/ethereum && \
@@ -48,7 +50,8 @@ RUN chown -R apl:apl /app/tmr-node && \
 USER apl
 RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~apl/.bash_profile \
  && echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~apl/.bash_profile \
- && echo 'eval "$(pyenv init -)"' >> ~apl/.bash_profile
+ && echo 'eval "$(pyenv init -)"' >> ~apl/.bash_profile \
+ && echo 'export LANG=ja_JP.utf8' >> ~apl/.bash_profile
 
 # install python & package
 RUN . ~/.bash_profile \
