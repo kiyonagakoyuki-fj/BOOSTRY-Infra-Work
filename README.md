@@ -58,6 +58,7 @@ docker build -t quorum .
 cd /home/ubuntu/gowork/src/github.com/getamis/istanbul-tools
 ./build/bin/istanbul setup --num 4 --nodes --verbose --quorum
 ```
+「static-nodes.json」「nodekeyA～D」「istanbul-genesis.json」を修正。
 
 
 ### 1.4.3 quorum設定・起動
