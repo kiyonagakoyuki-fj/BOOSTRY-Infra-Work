@@ -201,10 +201,10 @@ docker run -it --rm -d --name issuer --link postgres:postgres \
                                      -e DATABASE_URL=postgresql://apluser:apluserpass@postgres:5432/apldb \
                                      -e WEB3_HTTP_PROVIDER=http://quorum:8545 \
                                      -e ETH_ACCOUNT_PASSWORD=nvillage201803+ \
-                                     -e TOKEN_LIST_CONTRACT_ADDRESS=0xa45f4671830ecee2186fd78f4f61f6914a931d82 \
-                                     -e PERSONAL_INFO_CONTRACT_ADDRESS=0x82933ff0383d41a1cfbcd19ec5a11abd26cf22c2 \
-                                     -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x004a0e9ad2eabf72eb403febbb1dc8ccee6969e3 \
-                                     -e AGENT_ADDRESS=40d3cad73aedf8770625fe2e4528b724b55f2ac8 \
+                                     -e TOKEN_LIST_CONTRACT_ADDRESS=0x83b7ecea509526df59c3589d3b0a1ab068597f2f \
+                                     -e PERSONAL_INFO_CONTRACT_ADDRESS=0x3dc45962dfcef7bad90d418f12bd058c21dfdd5b \
+                                     -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x61a4fc0d8cfdd52617da5e1c37858edf9ca5e918 \
+                                     -e AGENT_ADDRESS=0xfb5cc8baed123f0d4f6ef0b52a0dce1c28640166 \
                                      -e RSA_PASSWORD=password \
                                      -p 5000:5000 \
                                      -v /home/ubuntu/tmr-docker/issuer/data:/app/tmr-issuer/data \
@@ -257,10 +257,10 @@ POC用の場合
 docker run -it --rm -d --name api --link postgres:postgres \
                                      --link quorum:quorum \
                                      -e APP_ENV=live \
-                                     -e TOKEN_LIST_CONTRACT_ADDRESS=0xa45f4671830ecee2186fd78f4f61f6914a931d82 \
-                                     -e PERSONAL_INFO_CONTRACT_ADDRESS=0x82933ff0383d41a1cfbcd19ec5a11abd26cf22c2 \
-                                     -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x004a0e9ad2eabf72eb403febbb1dc8ccee6969e3 \
-                                     -e WHITE_LIST_CONTRACT_ADDRESS=0xa22a31b2734eabcb075d185ffc159329c23909e1 \
+                                     -e TOKEN_LIST_CONTRACT_ADDRESS=0x83b7ecea509526df59c3589d3b0a1ab068597f2f \
+                                     -e PERSONAL_INFO_CONTRACT_ADDRESS=0x3dc45962dfcef7bad90d418f12bd058c21dfdd5b \
+                                     -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x61a4fc0d8cfdd52617da5e1c37858edf9ca5e918 \
+                                     -e WHITE_LIST_CONTRACT_ADDRESS=0xf8bef9bcfd43f096162722ee91d0e77095272280 \
                                      -p 5000:5000 api
 ```
 ## 4.2 nginxコンテナ
