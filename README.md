@@ -175,6 +175,8 @@ for u_dict in users:
 db.session.commit()
 ```
 ### 3.1.3 issuerコンテナ起動
+/home/ubuntu/tmr-docker/issuer/data/rsa/private.pemを作成
+
 ```
 docker run -it --rm -d --name issuer --link postgres:postgres \
                                      --link quorum:quorum \
@@ -186,7 +188,10 @@ docker run -it --rm -d --name issuer --link postgres:postgres \
                                      -e PERSONAL_INFO_CONTRACT_ADDRESS=<contractアドレス> \
                                      -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=<contractアドレス> \
                                      -e AGENT_ADDRESS=<決済業者のアドレス> \
-                                     -p 5000:5000 issuer
+                                     -e RSA_PASSWORD=password \
+                                     -p 5000:5000 \
+                                     -v /home/ubuntu/tmr-docker/issuer/data:/app/tmr-issuer/data \
+                                     issuer
 ```
 POC用の場合
 ```
@@ -200,7 +205,10 @@ docker run -it --rm -d --name issuer --link postgres:postgres \
                                      -e PERSONAL_INFO_CONTRACT_ADDRESS=0x82933ff0383d41a1cfbcd19ec5a11abd26cf22c2 \
                                      -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x004a0e9ad2eabf72eb403febbb1dc8ccee6969e3 \
                                      -e AGENT_ADDRESS=40d3cad73aedf8770625fe2e4528b724b55f2ac8 \
-                                     -p 5000:5000 issuer
+                                     -e RSA_PASSWORD=password \
+                                     -p 5000:5000 \
+                                     -v /home/ubuntu/tmr-docker/issuer/data:/app/tmr-issuer/data \
+                                     issuer
 ```
 ## 3.2 nginxコンテナ
 ※TODO
