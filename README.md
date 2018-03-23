@@ -196,13 +196,11 @@ docker run -it --rm -d --name issuer --link postgres:postgres \
                                      -e DATABASE_URL=postgresql://apluser:apluserpass@postgres:5432/apldb \
                                      -e WEB3_HTTP_PROVIDER=http://quorum:8545 \
                                      -e ETH_ACCOUNT_PASSWORD=nvillage201803+ \
-                                     -e TOKEN_LIST_CONTRACT_ADDRESS=0xce28b77c2f0f375e9421d41a34981e0a2684f4a1 \
+                                     -e TOKEN_LIST_CONTRACT_ADDRESS=0xa45f4671830ecee2186fd78f4f61f6914a931d82 \
                                      -e PERSONAL_INFO_CONTRACT_ADDRESS=0x82933ff0383d41a1cfbcd19ec5a11abd26cf22c2 \
                                      -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x004a0e9ad2eabf72eb403febbb1dc8ccee6969e3 \
                                      -e AGENT_ADDRESS=40d3cad73aedf8770625fe2e4528b724b55f2ac8 \
-                                     -p 5000:5000 issuer
-
-```
+                                     -p 5000:5000 issuer```
 ## 3.2 nginxコンテナ
 ※TODO
 
@@ -251,7 +249,7 @@ POC用の場合
 docker run -it --rm -d --name api --link postgres:postgres \
                                      --link quorum:quorum \
                                      -e APP_ENV=live \
-                                     -e TOKEN_LIST_CONTRACT_ADDRESS=0xce28b77c2f0f375e9421d41a34981e0a2684f4a1 \
+                                     -e TOKEN_LIST_CONTRACT_ADDRESS=0xa45f4671830ecee2186fd78f4f61f6914a931d82 \
                                      -e PERSONAL_INFO_CONTRACT_ADDRESS=0x82933ff0383d41a1cfbcd19ec5a11abd26cf22c2 \
                                      -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x004a0e9ad2eabf72eb403febbb1dc8ccee6969e3 \
                                      -e WHITE_LIST_CONTRACT_ADDRESS=0xa22a31b2734eabcb075d185ffc159329c23909e1 \
