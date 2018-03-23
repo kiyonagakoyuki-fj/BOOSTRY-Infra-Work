@@ -200,7 +200,8 @@ docker run -it --rm -d --name issuer --link postgres:postgres \
                                      -e PERSONAL_INFO_CONTRACT_ADDRESS=0x82933ff0383d41a1cfbcd19ec5a11abd26cf22c2 \
                                      -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x004a0e9ad2eabf72eb403febbb1dc8ccee6969e3 \
                                      -e AGENT_ADDRESS=40d3cad73aedf8770625fe2e4528b724b55f2ac8 \
-                                     -p 5000:5000 issuer```
+                                     -p 5000:5000 issuer
+```
 ## 3.2 nginxコンテナ
 ※TODO
 
@@ -232,7 +233,6 @@ rm pyethereum/.python-version
 # docker build
 docker build -t api .
 ```
-
 ### 4.1.2 APIコンテナ起動
 ```
 docker run -it --rm -d --name api --link postgres:postgres \
@@ -256,7 +256,18 @@ docker run -it --rm -d --name api --link postgres:postgres \
                                      -p 5000:5000 api
 ```
 ## 4.2 nginxコンテナ
-※TODO
+### 4.2.1 docker image作成
+```
+cd /home/ubuntu/tmr-docker/nginx
+
+# docker build
+docker build -t nginx .
+```
+### 4.2.2 nginxコンテナ起動
+```
+docker run -itd --rm --name nginx --link api:api -p 443:443 nginx
+```
+※basic認証あり。apluser/nvillage201803+
 
 ## 4.3 APIコンテナ更新手順
 ```
@@ -270,5 +281,3 @@ docker stop api
 docker rmi api
 ```
 上記後、docker build & docker run
-
-
