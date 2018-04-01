@@ -1,1 +1,3 @@
 **/qdata/*
+bank/data/rsa/*
+!.gitkeep
