@@ -12,7 +12,7 @@ mkdir -p qdata/dd/geth
 mkdir -p qdata/dd/keystore
 
 # enode id 取得
-enode=`docker run --rm -d --name quorum -v $pwd/qdata:/qdata quorum /usr/local/bin/bootnode --datadir=/qdata -writeaddress`
+enode=`sudo docker run --rm -d --name quorum -v $pwd/qdata:/qdata quorum /usr/local/bin/bootnode --datadir=/qdata -writeaddress`
 
 echo $enode
 # 設定copy
