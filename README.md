@@ -5,31 +5,13 @@
 * https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-using-the-repository
 
 ```
-# 必要パッケージのインストール
-sudo apt-get update
-sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+git clone https://github.com/N-Village/tmr-docker.git
+cd tmr-docker
+./installer/docker-installer.sh
 
-# GPG鍵の取得
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-
-# dockerのソースリストの更新
-sudo add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable"
-
-# docker-engineのインストール
-sudo apt-get update
-sudo apt-get install docker-ce
-```
-
-* dockerグループにubuntuユーザを追加する
-
-```
-sudo usermod -aG docker $USER
+# ubuntuユーザでdockerコマンドを利用する場合に実行。passwordがない環境の場合は、再ログインが必要。
 su - $USER
 ```
-※passwordがない環境の場合は、再度ログイン。
 
 ### 1.2. docker-composeインストール (現時点で未使用のため、実施しなくていい)
 ```
@@ -38,15 +20,10 @@ sudo chmod +x /usr/local/bin/docker-compose
 docker-compose -v
 ```
 
-### 1.3. tmr-dockerリポジトリのクローン
+### 1.3. quorumコンテナ作成
+#### 1.3.1. docker image作成
 ```
-git clone https://github.com/N-Village/tmr-docker.git
-```
-
-### 1.4. quorumコンテナ作成
-#### 1.4.1. docker image作成
-```
-cd tmr-docker/quorum
+cd quorum
 docker build -t quorum .
 ```
 
