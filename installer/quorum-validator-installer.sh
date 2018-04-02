@@ -14,6 +14,7 @@ cp generate-keys.sh qdata/generate-keys.sh
 
 pwd=`pwd`
 STATIC_NODES=$(cat static-nodes.json)
+TM_CONF=$(cat tm_base.conf)
 CURRENT_HOST_IP="10.0.0.0"
 
 # Initializing quorum
@@ -33,6 +34,13 @@ sudo echo "$STATIC_NODES" > qdata/dd/static-nodes.json
 
 # constellation-node generatekeys
 sudo docker run --rm -v $pwd/qdata:/qdata quorum /qdata/generate-keys.sh
+
+# tm.confの作成
+TM_CONF_URL="
+url = \"http://${CURRENT_HOST_IP}:9000/\"
+"
+TM_CONF="$TM_CONF$TM_CONF_URL"
+sudo echo "$TM_CONF" > qdata/tm.conf
 
 
 
