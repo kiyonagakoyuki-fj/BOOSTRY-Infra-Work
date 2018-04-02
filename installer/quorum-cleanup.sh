@@ -2,7 +2,7 @@
 set -Ceu
 
 # docker stop
-docker stop quorum
+sudo docker stop quorum
 
 # ディレクトリ削除
 rm -rf quorum/qdata
