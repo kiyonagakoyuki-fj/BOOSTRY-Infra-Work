@@ -215,18 +215,11 @@ docker run -it --rm -d --name issuer --link postgres:postgres \
                                      -e DATABASE_URL=postgresql://apluser:apluserpass@postgres:5432/apldb \
                                      -e WEB3_HTTP_PROVIDER=http://quorum:8545 \
                                      -e ETH_ACCOUNT_PASSWORD=nvillage201803+ \
-<<<<<<< HEAD
-                                     -e TOKEN_LIST_CONTRACT_ADDRESS=0x83b7ecea509526df59c3589d3b0a1ab068597f2f \
-                                     -e PERSONAL_INFO_CONTRACT_ADDRESS=0x3dc45962dfcef7bad90d418f12bd058c21dfdd5b \
-                                     -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x61a4fc0d8cfdd52617da5e1c37858edf9ca5e918 \
-                                     -e AGENT_ADDRESS=0xfb5cc8baed123f0d4f6ef0b52a0dce1c28640166 \
-=======
                                      -e TOKEN_LIST_CONTRACT_ADDRESS=0x4fc3941701a8b193fa6ab41b19b8a07b024fb578 \
                                      -e PERSONAL_INFO_CONTRACT_ADDRESS=0x358442a720a96987d25b9d7e07ec57a7d301a276 \
                                      -e WHITE_LIST_CONTRACT_ADDRESS=0x8337fa10730b22f3cffa6b9ec53bc7f098041e25 \
                                      -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x9abe8e37a1d52d8e140257ed057d4afa4f121d58 \
                                      -e AGENT_ADDRESS=0x9982f688af88ee715015dc3d351d8cdc23024ff4 \
->>>>>>> cbbec84306a6f8ceebcfea9c251f1a7ef1f69002
                                      -e RSA_PASSWORD=password \
                                      -p 5000:5000 \
                                      -v /home/ubuntu/tmr-docker/issuer/data:/app/tmr-issuer/data \
@@ -285,17 +278,10 @@ docker run -it --rm -d --name api --link postgres:postgres \
 docker run -it --rm -d --name api --link postgres:postgres \
                                      --link quorum:quorum \
                                      -e APP_ENV=live \
-<<<<<<< HEAD
-                                     -e TOKEN_LIST_CONTRACT_ADDRESS=0x83b7ecea509526df59c3589d3b0a1ab068597f2f \
-                                     -e PERSONAL_INFO_CONTRACT_ADDRESS=0x3dc45962dfcef7bad90d418f12bd058c21dfdd5b \
-                                     -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x61a4fc0d8cfdd52617da5e1c37858edf9ca5e918 \
-                                     -e WHITE_LIST_CONTRACT_ADDRESS=0xf8bef9bcfd43f096162722ee91d0e77095272280 \
-=======
                                      -e TOKEN_LIST_CONTRACT_ADDRESS=0x4fc3941701a8b193fa6ab41b19b8a07b024fb578 \
                                      -e PERSONAL_INFO_CONTRACT_ADDRESS=0x358442a720a96987d25b9d7e07ec57a7d301a276 \
                                      -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x9abe8e37a1d52d8e140257ed057d4afa4f121d58 \
                                      -e WHITE_LIST_CONTRACT_ADDRESS=0x8337fa10730b22f3cffa6b9ec53bc7f098041e25 \
->>>>>>> cbbec84306a6f8ceebcfea9c251f1a7ef1f69002
                                      -p 5000:5000 api
 ```
 
