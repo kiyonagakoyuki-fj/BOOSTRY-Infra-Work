@@ -23,6 +23,8 @@ sudo docker run --rm -v $pwd/qdata:/qdata quorum /usr/local/bin/geth --datadir /
 # Generate the node's Enode and key
 sudo docker run --rm -v $pwd/qdata:/qdata quorum /usr/local/bin/bootnode -genkey /qdata/dd/nodekey
 enode=`sudo docker run --rm -v $pwd/qdata:/qdata quorum /usr/local/bin/bootnode -nodekey /qdata/dd/nodekey -writeaddress`
+
+# static-nodes.jsonの作成
 ENODE=",
 \"enode://${enode}@${CURRENT_HOST_IP}:21000?discport=0\"
 ]"
