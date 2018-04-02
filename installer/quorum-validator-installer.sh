@@ -20,7 +20,7 @@ sudo docker run --rm -d -v $pwd/qdata:/qdata quorum /usr/local/bin/geth --datadi
 sudo docker run --rm -d -v $pwd/qdata:/qdata quorum /usr/local/bin/bootnode -genkey /qdata/dd/nodekey
 enode=`sudo docker run --rm -d -v $pwd/qdata:/qdata quorum /usr/local/bin/bootnode -nodekey /qdata/dd/nodekey -writeaddress`
 
-echo $enode
+echo $enode > txt.log
 # 設定copy
 # cp istanbul-genesis.json qdata/genesis.json
 # cp static-nodes.json qdata/dd/static-nodes.json
