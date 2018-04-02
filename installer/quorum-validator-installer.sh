@@ -25,11 +25,12 @@ sudo docker run --rm -v $pwd/qdata:/qdata quorum /usr/local/bin/bootnode -genkey
 enode=`sudo docker run --rm -v $pwd/qdata:/qdata quorum /usr/local/bin/bootnode -nodekey /qdata/dd/nodekey -writeaddress`
 
 # static-nodes.jsonの作成
-ENODE=",
-\"enode://${enode}@${CURRENT_HOST_IP}:21000?discport=0\"
+ENODE_ID="enode://${enode}@${CURRENT_HOST_IP}:21000?discport=0"
+ENODE_STR=",
+\"{$ENODE_ID}\"
 ]"
 STATIC_NODES=${STATIC_NODES::-2}
-STATIC_NODES="$STATIC_NODES$ENODE"
+STATIC_NODES="$STATIC_NODES$ENODE_STR"
 sudo echo "$STATIC_NODES" > qdata/dd/static-nodes.json
 
 # constellation-node generatekeys
@@ -43,7 +44,7 @@ TM_CONF="$TM_CONF$TM_CONF_URL"
 sudo echo "$TM_CONF" > qdata/tm.conf
 
 
-
+echo $ENODE_ID
 #enode://${enode}@${CURRENT_HOST_IP}:21000?discport=0"
 
 # 設定copy
