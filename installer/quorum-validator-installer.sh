@@ -29,7 +29,7 @@ ENODE=",
 ]"
 STATIC_NODES=${STATIC_NODES::-2}
 STATIC_NODES="$STATIC_NODES$ENODE"
-echo "$STATIC_NODES" > qdata/dd/static-nodes.json
+sudo echo "$STATIC_NODES" > qdata/dd/static-nodes.json
 
 
 #enode://${enode}@${CURRENT_HOST_IP}:21000?discport=0"
