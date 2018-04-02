@@ -1,9 +1,9 @@
 #!/bin/bash
 set -Ceu
-pwd=`pwd`
 
 # quorum docker imageの作成
 cd quorum
+pwd=`pwd`
 sudo docker build -t quorum .
 
 # datadir作成
@@ -11,8 +11,8 @@ mkdir -p qdata/{logs,keys}
 mkdir -p qdata/dd/geth
 mkdir -p qdata/dd/keystore
 
-# enode id 取得
-enode=`sudo docker run --rm -d --name quorum -v $pwd/qdata:/qdata quorum /usr/local/bin/bootnode --datadir=/qdata -writeaddress`
+# Generate the node's Enode and key
+enode=`sudo docker run --rm -d -v $pwd/qdata:/qdata quorum /usr/local/bin/bootnode -genkey /qdata/dd/nodekey -writeaddress`
 
 echo $enode
 # 設定copy
