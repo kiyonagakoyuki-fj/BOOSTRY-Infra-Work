@@ -5,19 +5,18 @@ set -Ceu
 cd quorum
 sudo docker build -t quorum .
 
-
 # 初期設定
 mkdir -p qdata/{logs,keys}
 mkdir -p qdata/dd/geth
 mkdir -p qdata/dd/keystore
 cp istanbul-genesis.json qdata/genesis.json
+cp generate-keys.sh qdata/generate-keys.sh
 
 pwd=`pwd`
 STATIC_NODES=$(cat static-nodes.json)
 CURRENT_HOST_IP="10.0.0.0"
 
 # Initializing quorum
-
 sudo docker run --rm -v $pwd/qdata:/qdata quorum /usr/local/bin/geth --datadir /qdata/dd init /qdata/genesis.json
 
 # Generate the node's Enode and key
@@ -31,6 +30,10 @@ ENODE=",
 STATIC_NODES=${STATIC_NODES::-2}
 STATIC_NODES="$STATIC_NODES$ENODE"
 sudo echo "$STATIC_NODES" > qdata/dd/static-nodes.json
+
+# constellation-node generatekeys
+sudo docker run --rm -v $pwd/qdata:/qdata quorum /qdata/generate-keys.sh
+
 
 
 #enode://${enode}@${CURRENT_HOST_IP}:21000?discport=0"
