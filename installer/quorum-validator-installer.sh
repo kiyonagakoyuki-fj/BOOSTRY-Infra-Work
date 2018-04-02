@@ -11,6 +11,7 @@ mkdir -p qdata/dd/geth
 mkdir -p qdata/dd/keystore
 cp istanbul-genesis.json qdata/genesis.json
 cp generate-keys.sh qdata/generate-keys.sh
+cp start-node.sh qdata/start-node.sh
 
 pwd=`pwd`
 STATIC_NODES=$(cat static-nodes.json)
