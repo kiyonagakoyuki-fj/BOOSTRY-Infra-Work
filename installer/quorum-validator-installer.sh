@@ -24,7 +24,7 @@ sudo docker run --rm -v $pwd/qdata:/qdata quorum /usr/local/bin/geth --datadir /
 sudo docker run --rm -v $pwd/qdata:/qdata quorum /usr/local/bin/bootnode -genkey /qdata/dd/nodekey
 enode=`sudo docker run --rm -v $pwd/qdata:/qdata quorum /usr/local/bin/bootnode -nodekey /qdata/dd/nodekey -writeaddress`
 ENODE=",
-    \"$enode://${enode}@${CURRENT_HOST_IP}:21000?discport=0\"
+\"enode://${enode}@${CURRENT_HOST_IP}:21000?discport=0\"
 ]"
 STATIC_NODES=${STATIC_NODES::-2}
 STATIC_NODES="$STATIC_NODES$ENODE"
