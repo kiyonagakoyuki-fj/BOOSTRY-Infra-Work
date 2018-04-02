@@ -14,11 +14,11 @@ mkdir -p qdata/dd/keystore
 
 # Initializing quorum
 cp istanbul-genesis.json qdata/genesis.json
-sudo docker run --rm -d -v $pwd/qdata:/qdata quorum /usr/local/bin/geth --datadir /qdata/dd init /qdata/genesis.json
+sudo docker run --rm -v $pwd/qdata:/qdata quorum /usr/local/bin/geth --datadir /qdata/dd init /qdata/genesis.json
 
 # Generate the node's Enode and key
-sudo docker run --rm -d -v $pwd/qdata:/qdata quorum /usr/local/bin/bootnode -genkey /qdata/dd/nodekey
-enode=`sudo docker run --rm -d -v $pwd/qdata:/qdata quorum /usr/local/bin/bootnode -nodekey /qdata/dd/nodekey -writeaddress`
+sudo docker run --rm -v $pwd/qdata:/qdata quorum /usr/local/bin/bootnode -genkey /qdata/dd/nodekey
+enode=`sudo docker run --rm -v $pwd/qdata:/qdata quorum /usr/local/bin/bootnode -nodekey /qdata/dd/nodekey -writeaddress`
 
 echo $enode > txt.log
 # 設定copy
