@@ -27,11 +27,14 @@ enode=`sudo docker run --rm -v $pwd/qdata:/qdata quorum /usr/local/bin/bootnode 
 # static-nodes.jsonの作成
 ENODE_ID="enode://${enode}@${CURRENT_HOST_IP}:21000?discport=0"
 ENODE_STR=",
-\"{$ENODE_ID}\"
+\"$ENODE_ID\"
 ]"
 STATIC_NODES=${STATIC_NODES::-2}
 STATIC_NODES="$STATIC_NODES$ENODE_STR"
 sudo echo "$STATIC_NODES" > qdata/dd/static-nodes.json
+
+# permissioned-nodes.json
+cp qdata/dd/static-nodes.json qdata/dd/permissioned-nodes.json
 
 # constellation-node generatekeys
 sudo docker run --rm -v $pwd/qdata:/qdata quorum /qdata/generate-keys.sh
@@ -43,13 +46,8 @@ url = \"http://${CURRENT_HOST_IP}:9000/\"
 TM_CONF="$TM_CONF$TM_CONF_URL"
 sudo echo "$TM_CONF" > qdata/tm.conf
 
+# geth 起動
+sudo docker run --rm -d --name quorum -v $pwd/qdata:/qdata -p 9000:9000 -p 21000:21000 -p 21000:21000/udp -p 8545:8545 quorum
 
+echo "quorum(validator)ノードの起動完了"
 echo $ENODE_ID
-#enode://${enode}@${CURRENT_HOST_IP}:21000?discport=0"
-
-# 設定copy
-# cp istanbul-genesis.json qdata/genesis.json
-# cp static-nodes.json qdata/dd/static-nodes.json
-# cp static-nodes.json qdata/dd/permissioned-nodes.json
-# cp start-node.sh qdata/start-node.sh
-
