@@ -1,9 +1,8 @@
 # tmr-docker
-# 1. 【全ノード共通】環境構築（Ubuntu 16.04）
-## 1.1 docker-ceインストール
-### 1.1.1 インストール
-下記を参考。
-https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-using-the-repository
+## 1. 【全ノード共通】環境構築（Ubuntu 16.04の場合）
+### 1.1. docker-ceインストール
+* 下記を参考。
+* https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-using-the-repository
 
 ```
 # 必要パッケージのインストール
@@ -24,46 +23,49 @@ sudo apt-get update
 sudo apt-get install docker-ce
 ```
 
-### 1.1.2 dockerグループにubuntuユーザを追加
+* dockerグループにubuntuユーザを追加する
+
 ```
 sudo usermod -aG docker $USER
 su - $USER
 ```
 ※passwordがない環境の場合は、再度ログイン。
 
-## 1.2 docker-composeインストール (現時点で未使用のため、実施しなくていい)
+### 1.2. docker-composeインストール (現時点で未使用のため、実施しなくていい)
 ```
 sudo curl -L "https://github.com/docker/compose/releases/download/1.19.0/docker-compose-Linux-x86_64" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 docker-compose -v
 ```
 
-## 1.3 tmr-dockerリポジトリのクローン
+### 1.3. tmr-dockerリポジトリのクローン
 ```
-git clone https://github.com/N-Village/tmr-docker
+git clone https://github.com/N-Village/tmr-docker.git
 ```
 
-## 1.4 quorumコンテナ
-### 1.4.1 docker image作成
+### 1.4. quorumコンテナ作成
+#### 1.4.1. docker image作成
 ```
 cd tmr-docker/quorum
 docker build -t quorum .
 ```
 
-### 1.4.2 istanbul用ノードの設定
-初期ノードの設定を新規で行う場合は、istanbul-toolsを入れてノード生成処理を実施する。
-ソース：https://github.com/getamis/istanbul-tools
-※Goが必要
+#### 1.4.2. istanbul用ノードの設定
+* 初期ノードの設定を新規で行う場合は、istanbul-toolsを入れてノード生成処理を実施する。
+* ソース：https://github.com/getamis/istanbul-tools
+* ※Goが必要
+
 ```
 cd /home/ubuntu/gowork/src/github.com/getamis/istanbul-tools
 ./build/bin/istanbul setup --num 4 --nodes --verbose --quorum
 ```
-「static-nodes.json」「nodekeyA～D」「istanbul-genesis.json」を修正。
 
+* 「static-nodes.json」「nodekeyA～D」「istanbul-genesis.json」を修正。
 
-### 1.4.3 quorum設定・起動
-ノード稼動環境のIPアドレスに合わせて、「tmconf/tmA～D.conf」、「static-nodes.json」のIPアドレスを修正する。
-修正後、下記コマンドを実行。引数はノードA~Dで変更する。
+#### 1.4.3. quorum設定・起動
+* ノード稼動環境のIPアドレスに合わせて、「tmconf/tmA～D.conf」、「static-nodes.json」のIPアドレスを修正する。
+* 修正後、下記コマンドを実行。引数はノードA~Dで変更する。
+
 ```
 ./quorum-init.sh A
 ./quorum-start.sh
@@ -72,35 +74,43 @@ cd /home/ubuntu/gowork/src/github.com/getamis/istanbul-tools
 tail -f qdata/logs/geth.log
 ```
 
-### 1.4.4 account作成・・・A(発行体ノード)、C・D（サトシナカモトノード）で実施
+#### 1.4.4. account作成・・・A(発行体ノード)、C・D（サトシナカモトノード）で実施
+* 以下のスクリプトを実行する。
+
 ```
 ./quorum-create-account.sh
 ```
-出力されたアカウントを控える
+
+* 実行結果として、アカウントが出力されるので、控えておく。
 
 
-### 1.4.5 コントラクトの登録
-サトシナカモトノードをアンロックし、remixからコントラクトを登録
+#### 1.4.5. コントラクトの登録
+* サトシナカモトノードをアンロックし、Remix等からコントラクトを登録する。
+* アカウントのアンロックは以下のようにして行う。
+
 ```
 # gethにattach
 docker exec -it quorum geth attach qdata/dd/geth.ipc
 
 # アンロック
-personal.unlockAccount(eth.accounts[0], "nvillage201803+", 0)
+personal.unlockAccount(eth.accounts[0], "nvillage201803+", 1000)
 
 # 登録後のコントラクト確認
-eth.contract('0xce28b77c2f0f375e9421d41a34981e0a2684f4a1')
+eth.contract(<contract_address>)
 ```
 
 
-# 2. 【発行体 & API】PostgreSQL構築
-## 2.1 PostgreSQLコンテナ起動
+## 2. 【ISSUERノード & APIノードで実施】DB（PostgreSQL）構築
+### 2.1. PostgreSQLコンテナ起動
 ```
 cd /home/ubuntu/
 mkdir postgresql_data
 docker run -d --name postgres -p 5432:5432 -v ~/postgresql_data:/var/lib/postgresql/data postgres:9.6
 ```
-## 2.2 DB作成
+
+### 2.2. DB作成
+* 以下の手順でDBを作成する。
+
 ```
 # DB接続
 docker run -it --rm --link postgres:postgres postgres:9.6 psql -h postgres -U postgres
@@ -121,9 +131,9 @@ postgres=# \l
 (4 rows)
 ```
 
-# 3. 【発行体】残りの環境構築
-## 3.1 issuerコンテナ
-### 3.1.1 docker image作成
+## 3. 【ISSUERノードのみで実施】その他の環境構築
+### 3.1. issuerコンテナ
+#### 3.1.1. docker image作成
 ```
 cd /home/ubuntu/tmr-docker/issuer
 
@@ -137,7 +147,7 @@ rm pyethereum/.python-version
 docker build -t issuer .
 ```
 
-### 3.1.2 migrate
+#### 3.1.2. DBのマイグレート
 ```
 # issuerコンテナに接続
 docker run -it --rm --link postgres:postgres  --link quorum:quorum \
@@ -174,8 +184,9 @@ for u_dict in users:
 
 db.session.commit()
 ```
-### 3.1.3 issuerコンテナ起動
-/home/ubuntu/tmr-docker/issuer/data/rsa/private.pemを作成
+
+#### 3.1.3. issuerコンテナ起動
+* ホストマシン上にRSA鍵（`/home/ubuntu/tmr-docker/issuer/data/rsa/private.pem`）を作成して保存する。
 
 ```
 docker run -it --rm -d --name issuer --link postgres:postgres \
@@ -186,6 +197,7 @@ docker run -it --rm -d --name issuer --link postgres:postgres \
                                      -e ETH_ACCOUNT_PASSWORD=nvillage201803+ \
                                      -e TOKEN_LIST_CONTRACT_ADDRESS=<contractアドレス> \
                                      -e PERSONAL_INFO_CONTRACT_ADDRESS=<contractアドレス> \
+                                     -e WHITE_LIST_CONTRACT_ADDRESS=<contractアドレス> \
                                      -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=<contractアドレス> \
                                      -e AGENT_ADDRESS=<決済業者のアドレス> \
                                      -e RSA_PASSWORD=password \
@@ -193,7 +205,9 @@ docker run -it --rm -d --name issuer --link postgres:postgres \
                                      -v /home/ubuntu/tmr-docker/issuer/data:/app/tmr-issuer/data \
                                      issuer
 ```
-POC用の場合
+
+* 直近のPOC用環境は以下の設定で起動している。
+
 ```
 docker run -it --rm -d --name issuer --link postgres:postgres \
                                      --link quorum:quorum \
@@ -201,34 +215,45 @@ docker run -it --rm -d --name issuer --link postgres:postgres \
                                      -e DATABASE_URL=postgresql://apluser:apluserpass@postgres:5432/apldb \
                                      -e WEB3_HTTP_PROVIDER=http://quorum:8545 \
                                      -e ETH_ACCOUNT_PASSWORD=nvillage201803+ \
+<<<<<<< HEAD
                                      -e TOKEN_LIST_CONTRACT_ADDRESS=0x83b7ecea509526df59c3589d3b0a1ab068597f2f \
                                      -e PERSONAL_INFO_CONTRACT_ADDRESS=0x3dc45962dfcef7bad90d418f12bd058c21dfdd5b \
                                      -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x61a4fc0d8cfdd52617da5e1c37858edf9ca5e918 \
                                      -e AGENT_ADDRESS=0xfb5cc8baed123f0d4f6ef0b52a0dce1c28640166 \
+=======
+                                     -e TOKEN_LIST_CONTRACT_ADDRESS=0x4fc3941701a8b193fa6ab41b19b8a07b024fb578 \
+                                     -e PERSONAL_INFO_CONTRACT_ADDRESS=0x358442a720a96987d25b9d7e07ec57a7d301a276 \
+                                     -e WHITE_LIST_CONTRACT_ADDRESS=0x8337fa10730b22f3cffa6b9ec53bc7f098041e25 \
+                                     -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x9abe8e37a1d52d8e140257ed057d4afa4f121d58 \
+                                     -e AGENT_ADDRESS=0x9982f688af88ee715015dc3d351d8cdc23024ff4 \
+>>>>>>> cbbec84306a6f8ceebcfea9c251f1a7ef1f69002
                                      -e RSA_PASSWORD=password \
                                      -p 5000:5000 \
                                      -v /home/ubuntu/tmr-docker/issuer/data:/app/tmr-issuer/data \
                                      issuer
 ```
-## 3.2 nginxコンテナ
+### 3.2 nginxコンテナ
 ※TODO
 
-## 3.3 issuerコンテナ更新手順
+### 3.3 issuerコンテナ更新手順
 ```
 # ソース更新
 cd /home/ubuntu/tmr-docker/issuer/tmr-issuer
-git pull
+git pull origin master
 
 # コンテナ停止
 docker stop issuer
+
 # docker image削除
 docker rmi issuer
 ```
-上記後、docker build & docker run
 
-# 4. 【API】残りの環境構築
-## 4.1 APIコンテナ
-### 4.1.1 docker image作成
+* 上記を実施後に、docker build & docker run
+
+
+## 4. 【APIノードのみで実施】その他の環境構築
+### 4.1. APIコンテナ
+#### 4.1.1. docker image作成
 ```
 cd /home/ubuntu/tmr-docker/api
 
@@ -241,7 +266,8 @@ rm pyethereum/.python-version
 # docker build
 docker build -t api .
 ```
-### 4.1.2 APIコンテナ起動
+
+#### 4.1.2 APIコンテナ起動
 ```
 docker run -it --rm -d --name api --link postgres:postgres \
                                      --link quorum:quorum \
@@ -252,40 +278,89 @@ docker run -it --rm -d --name api --link postgres:postgres \
                                      -e WHITE_LIST_CONTRACT_ADDRESS=<contractアドレス> \
                                      -p 5000:5000 api
 ```
-POC用の場合
+
+* 直近のPOC用環境は以下の設定で起動している。
+
 ```
 docker run -it --rm -d --name api --link postgres:postgres \
                                      --link quorum:quorum \
                                      -e APP_ENV=live \
+<<<<<<< HEAD
                                      -e TOKEN_LIST_CONTRACT_ADDRESS=0x83b7ecea509526df59c3589d3b0a1ab068597f2f \
                                      -e PERSONAL_INFO_CONTRACT_ADDRESS=0x3dc45962dfcef7bad90d418f12bd058c21dfdd5b \
                                      -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x61a4fc0d8cfdd52617da5e1c37858edf9ca5e918 \
                                      -e WHITE_LIST_CONTRACT_ADDRESS=0xf8bef9bcfd43f096162722ee91d0e77095272280 \
+=======
+                                     -e TOKEN_LIST_CONTRACT_ADDRESS=0x4fc3941701a8b193fa6ab41b19b8a07b024fb578 \
+                                     -e PERSONAL_INFO_CONTRACT_ADDRESS=0x358442a720a96987d25b9d7e07ec57a7d301a276 \
+                                     -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x9abe8e37a1d52d8e140257ed057d4afa4f121d58 \
+                                     -e WHITE_LIST_CONTRACT_ADDRESS=0x8337fa10730b22f3cffa6b9ec53bc7f098041e25 \
+>>>>>>> cbbec84306a6f8ceebcfea9c251f1a7ef1f69002
                                      -p 5000:5000 api
 ```
-## 4.2 nginxコンテナ
-### 4.2.1 docker image作成
+
+### 4.2. nginxコンテナ
+#### 4.2.1. docker image作成
 ```
 cd /home/ubuntu/tmr-docker/nginx
 
 # docker build
 docker build -t nginx .
 ```
-### 4.2.2 nginxコンテナ起動
+
+#### 4.2.2. nginxコンテナ起動
 ```
 docker run -itd --rm --name nginx --link api:api -p 443:443 nginx
 ```
-※basic認証あり。apluser/nvillage201803+
+* ※basic認証あり。apluser/nvillage201803+
 
-## 4.3 APIコンテナ更新手順
+### 4.3. APIコンテナ更新手順
 ```
 # ソース更新
 cd /home/ubuntu/tmr-docker/api/tmr-node
-git pull
+git pull origin master
 
 # コンテナ停止
 docker stop api
+
 # docker image削除
 docker rmi api
 ```
-上記後、docker build & docker run
+
+* 上記後、docker build & docker run
+
+## 5. 【BANKノードのみで実施】その他の環境構築
+### 5.1. BANKコンテナ
+#### 5.1.1. docker image作成
+
+```
+cd /home/ubuntu/tmr-docker/bank
+
+# 必要なソースを取得
+git clone https://github.com/N-Village/tmr-bank.git
+git clone https://github.com/pyenv/pyenv.git
+
+# docker build
+docker build -t bank .
+```
+
+#### 5.1.2. BANKコンテナ起動
+* BANKノードはコンテナに直接ログインする。詳細は`tmr-bank`リポジトリのREADMEを参照。
+
+```
+docker run -it --rm —name bank —link quorum:quorum \
+              -e WEB3_HTTP_PROVIDER=http://quorum:8545 \
+              -e WHITE_LIST_CONTRACT_ADDRESS=<contractアドレス> \
+              -e AGENT_ADDRESS= <決済業者のアドレス> \
+              bank bash
+```
+
+* 直近のPOC用環境は以下の設定で起動している。
+
+```
+docker run -it --rm —name bank —link quorum:quorum \
+              -e WEB3_HTTP_PROVIDER=http://quorum:8545 \
+              -e WHITE_LIST_CONTRACT_ADDRESS=0x8337fa10730b22f3cffa6b9ec53bc7f098041e25 \
+              -e AGENT_ADDRESS= 0x9982f688af88ee715015dc3d351d8cdc23024ff4 \
+              bank bash
+```
