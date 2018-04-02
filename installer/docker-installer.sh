@@ -1,3 +1,5 @@
+#!/bin/bash
+set -Ceu
 
 # 必要パッケージのインストール
 sudo apt-get update
