@@ -24,7 +24,7 @@ cp pass.txt qdata/pass.txt
 
 pwd=`pwd`
 CURRENT_HOST_IP="$1"
-NODE_TYPE="$1"
+NODE_TYPE="$2"
 STATIC_NODES=$(cat static-nodes.json)
 TM_CONF=$(cat tm_base.conf)
 
