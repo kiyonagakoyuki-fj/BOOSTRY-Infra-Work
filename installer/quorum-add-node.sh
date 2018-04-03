@@ -2,7 +2,8 @@
 set -Ceu
 
 # 引数チェック
-MESSAGE='Usage: quorum-add-validator.sh <enode id> <coinbase>'
+MESSAGE='Usage: quorum-add-validator.sh <enode id> <coinbase> <NODE_TYPE>
+                NODE_TYPE: validator, general'
 if ( [ $# -ne 2 ] ); then
     echo "$MESSAGE"
     exit
@@ -12,7 +13,8 @@ fi
 cd quorum
 pwd=`pwd`
 ENODE_ID="$1"
-coinbase="$2"
+CONBASE="$2"
+NODE_TYPE="$3"
 STATIC_NODES=$(cat static-nodes.json)
 
 # static-nodes.jsonの作成
@@ -26,10 +28,12 @@ sudo cp static-nodes.json qdata/dd/static-nodes.json
 sudo cp static-nodes.json qdata/dd/permissioned-nodes.json
 
 # istanbul.propose;
-sudo docker run --rm -v $pwd/qdata:/qdata quorum geth attach qdata/dd/geth.ipc <<END
-istanbul.propose("$coinbase", true)
-exit
-END
+if [[ "$NODE_TYPE" == "validator" ]]; then
+  sudo docker run --rm -v $pwd/qdata:/qdata quorum geth attach qdata/dd/geth.ipc <<END
+  istanbul.propose("$CONBASE", true)
+  exit
+  END
+fi
 
 # 結果出力
-echo "quorum(validator)ノードの追加完了"
+echo "quorumノードの追加完了"

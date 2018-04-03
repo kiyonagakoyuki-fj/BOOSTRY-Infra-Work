@@ -2,8 +2,9 @@
 set -Ceu
 
 # 引数チェック
-MESSAGE='Usage: quorum-init.sh <CURRENT_HOST_IP>'
-if ( [ $# -ne 1 ] ); then
+MESSAGE='Usage: quorum-init.sh <CURRENT_HOST_IP> <NODE_TYPE>
+                NODE_TYPE: validator, general'
+if ( [ $# -ne 2 ] ); then
     echo "$MESSAGE"
     exit
 fi
@@ -23,6 +24,7 @@ cp pass.txt qdata/pass.txt
 
 pwd=`pwd`
 CURRENT_HOST_IP="$1"
+NODE_TYPE="$1"
 STATIC_NODES=$(cat static-nodes.json)
 TM_CONF=$(cat tm_base.conf)
 
@@ -60,7 +62,7 @@ sudo echo "$TM_CONF" > qdata/tm.conf
 account=`sudo docker run --rm -v $pwd/qdata:/qdata quorum /usr/local/bin/geth account new --datadir /qdata/dd --password /qdata/pass.txt`
 
 # geth 起動
-sudo docker run --rm -d --name quorum -v $pwd/qdata:/qdata -p 9000:9000 -p 21000:21000 -p 21000:21000/udp -p 8545:8545 -e NODE_TYPE=validator quorum
+sudo docker run --rm -d --name quorum -v $pwd/qdata:/qdata -p 9000:9000 -p 21000:21000 -p 21000:21000/udp -p 8545:8545 -e NODE_TYPE=$NODE_TYPE quorum
 
 # 起動を15秒待つ
 sleep 15
@@ -73,7 +75,7 @@ END`
 coinbase=`echo "$coinbase" | grep "coinbase"`
 
 # 結果出力
-echo "quorum(validator)ノードの起動完了"
+echo "quorumノードの起動完了"
 echo "--- enode id ---"
 echo $ENODE_ID
 echo "--- coinbase ---"
