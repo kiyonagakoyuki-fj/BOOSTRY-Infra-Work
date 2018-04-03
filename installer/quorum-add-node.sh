@@ -13,7 +13,7 @@ fi
 cd quorum
 pwd=`pwd`
 ENODE_ID="$1"
-CONBASE="$2"
+COINBASE="$2"
 NODE_TYPE="$3"
 STATIC_NODES=$(cat static-nodes.json)
 
@@ -30,7 +30,7 @@ sudo cp static-nodes.json qdata/dd/permissioned-nodes.json
 # istanbul.propose;
 if [[ "$NODE_TYPE" == "validator" ]]; then
   sudo docker run --rm -v $pwd/qdata:/qdata quorum geth attach qdata/dd/geth.ipc <<END
-  istanbul.propose("$CONBASE", true)
+  istanbul.propose("$COINBASE", true)
   exit
   END
 fi
