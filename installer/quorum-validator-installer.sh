@@ -19,6 +19,7 @@ mkdir -p qdata/dd/keystore
 cp istanbul-genesis.json qdata/genesis.json
 cp generate-keys.sh qdata/generate-keys.sh
 cp start-node.sh qdata/start-node.sh
+cp pass.txt qdata/pass.txt
 
 pwd=`pwd`
 CURRENT_HOST_IP="$1"
@@ -57,6 +58,12 @@ sudo echo "$TM_CONF" > qdata/tm.conf
 
 # geth 起動
 sudo docker run --rm -d --name quorum -v $pwd/qdata:/qdata -p 9000:9000 -p 21000:21000 -p 21000:21000/udp -p 8545:8545 quorum
+
+# account作成
+sudo docker run --rm -v $pwd/qdata:/qdata quorum /usr/local/bin/geth account new --datadir /qdata/dd --password /qdata/pass.txt
+
+# unlock
+sudo docker run --rm -v $pwd/qdata:/qdata quorum /usr/local/bin/geth --unlock 0 --datadir /qdata/dd --password /qdata/pass.txt
 
 echo "quorum(validator)ノードの起動完了"
 echo $ENODE_ID
