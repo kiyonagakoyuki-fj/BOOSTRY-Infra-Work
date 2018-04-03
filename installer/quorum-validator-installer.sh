@@ -60,7 +60,7 @@ sudo echo "$TM_CONF" > qdata/tm.conf
 account=`sudo docker run --rm -v $pwd/qdata:/qdata quorum /usr/local/bin/geth account new --datadir /qdata/dd --password /qdata/pass.txt`
 
 # geth 起動
-sudo docker run --rm -d --name quorum -v $pwd/qdata:/qdata -p 9000:9000 -p 21000:21000 -p 21000:21000/udp -p 8545:8545 quorum
+sudo docker run --rm -d --name quorum -v $pwd/qdata:/qdata -p 9000:9000 -p 21000:21000 -p 21000:21000/udp -p 8545:8545 -e NODE_TYPE=validator quorum
 
 # 起動を15秒待つ
 sleep 15

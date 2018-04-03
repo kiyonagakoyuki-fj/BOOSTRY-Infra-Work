@@ -17,4 +17,8 @@ nohup /usr/local/bin/constellation-node $TMCONF 2>> /qdata/logs/constellation.lo
 sleep 10
 
 echo "[*] Starting node"
-PRIVATE_CONFIG=$TMCONF /usr/local/bin/geth --cache=1024 --datadir /qdata/dd --networkid 2017 --syncmode full --mine --rpc --rpcaddr 0.0.0.0 --rpccorsdomain "*" --rpcapi 'admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum,istanbul' --permissioned --rpcport 8545 --verbosity 2 --port 21000 2>> /qdata/logs/geth.log
+if [[ "$NODE_TYPE" == "general" ]]; then
+  PRIVATE_CONFIG=$TMCONF /usr/local/bin/geth --cache=1024 --datadir /qdata/dd --networkid 2017 --rpc --rpcaddr 0.0.0.0 --rpccorsdomain "*" --rpcapi 'admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum,istanbul' --permissioned --rpcport 8545 --verbosity 2 --port 21000 2>> /qdata/logs/geth.log
+else
+  PRIVATE_CONFIG=$TMCONF /usr/local/bin/geth --cache=1024 --datadir /qdata/dd --networkid 2017 --syncmode full --mine --rpc --rpcaddr 0.0.0.0 --rpccorsdomain "*" --rpcapi 'admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum,istanbul' --permissioned --rpcport 8545 --verbosity 2 --port 21000 2>> /qdata/logs/geth.log
+fi
