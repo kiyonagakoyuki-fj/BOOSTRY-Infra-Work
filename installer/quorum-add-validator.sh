@@ -2,7 +2,7 @@
 set -Ceu
 
 # 引数チェック
-MESSAGE='Usage: quorum-init.sh <CURRENT_HOST_IP>'
+MESSAGE='Usage: quorum-add-validator.sh <enode-id>'
 if ( [ $# -ne 1 ] ); then
     echo "$MESSAGE"
     exit
@@ -62,8 +62,21 @@ account=`sudo docker run --rm -v $pwd/qdata:/qdata quorum /usr/local/bin/geth ac
 # geth 起動
 sudo docker run --rm -d --name quorum -v $pwd/qdata:/qdata -p 9000:9000 -p 21000:21000 -p 21000:21000/udp -p 8545:8545 quorum
 
+# 起動を15秒待つ
+sleep 15
+
+# coinbase取得
+coinbase=`sudo docker run --rm -v $pwd/qdata:/qdata quorum geth attach qdata/dd/geth.ipc <<END
+eth.coinbase
+exit
+END`
+coinbase=`echo "$coinbase" | grep "coinbase"`
+
+# 結果出力
 echo "quorum(validator)ノードの起動完了"
 echo "--- enode id ---"
 echo $ENODE_ID
+echo "--- coinbase ---"
+echo $coinbase
 echo "--- account ---"
 echo $account
