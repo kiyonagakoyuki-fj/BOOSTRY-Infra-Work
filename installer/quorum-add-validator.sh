@@ -21,7 +21,7 @@ ENODE_STR=",
 ]"
 STATIC_NODES=${STATIC_NODES::-2}
 STATIC_NODES="$STATIC_NODES$ENODE_STR"
-sudo echo "$STATIC_NODES" >static-nodes.json
+sudo echo "$STATIC_NODES" >|static-nodes.json
 sudo cp static-nodes.json qdata/dd/static-nodes.json
 sudo cp static-nodes.json qdata/dd/permissioned-nodes.json
 
