@@ -1,6 +1,13 @@
 #!/bin/bash
 set -Ceu
 
+# 引数チェック
+MESSAGE='Usage: quorum-init.sh <CURRENT_HOST_IP>'
+if ( [ $# -ne 1 ] ); then
+    echo "$MESSAGE"
+    exit
+fi
+
 # quorum docker imageの作成
 cd quorum
 sudo docker build -t quorum .
@@ -14,9 +21,10 @@ cp generate-keys.sh qdata/generate-keys.sh
 cp start-node.sh qdata/start-node.sh
 
 pwd=`pwd`
+CURRENT_HOST_IP="$1"
 STATIC_NODES=$(cat static-nodes.json)
 TM_CONF=$(cat tm_base.conf)
-CURRENT_HOST_IP="10.0.0.0"
+
 
 # Initializing quorum
 sudo docker run --rm -v $pwd/qdata:/qdata quorum /usr/local/bin/geth --datadir /qdata/dd init /qdata/genesis.json
