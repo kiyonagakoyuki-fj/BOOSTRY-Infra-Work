@@ -2,9 +2,9 @@
 set -Ceu
 
 # 引数チェック
-MESSAGE='Usage: quorum-add-validator.sh <enode id> <coinbase> <NODE_TYPE>
+MESSAGE='Usage: quorum-add-node.sh <enode id> <coinbase> <NODE_TYPE>
                 NODE_TYPE: validator, general'
-if ( [ $# -ne 2 ] ); then
+if ( [ $# -ne 3 ] ); then
     echo "$MESSAGE"
     exit
 fi

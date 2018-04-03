@@ -2,7 +2,7 @@
 set -Ceu
 
 # 引数チェック
-MESSAGE='Usage: quorum-init.sh <CURRENT_HOST_IP> <NODE_TYPE>
+MESSAGE='Usage: quorum-installer.sh <CURRENT_HOST_IP> <NODE_TYPE>
                 NODE_TYPE: validator, general'
 if ( [ $# -ne 2 ] ); then
     echo "$MESSAGE"
