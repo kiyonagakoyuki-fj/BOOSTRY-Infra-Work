@@ -21,3 +21,8 @@ rm issuer/pyethereum/.python-version
 
 # docker build
 sudo docker build -t issuer issuer/.
+
+# migrate
+sudo docker run --rm --link postgres:postgres  --link quorum:quorum \
+                    -e DEV_DATABASE_URL=postgresql://apluser:apluserpass@postgres:5432/apldb \
+                    -e WEB3_HTTP_PROVIDER=http://quorum:8545  issuer /installer/issuer-migrate.sh
