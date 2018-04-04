@@ -2,7 +2,7 @@
 set -Ceu
 
 # postgresqlコンテナ作成
-mkdir ~/postgresql_data
+mkdir -p ~/postgresql_data
 sudo docker run --rm -d --name postgres -p 5432:5432 -v ~/postgresql_data:/var/lib/postgresql/data postgres:9.6
 
 # DB作成
