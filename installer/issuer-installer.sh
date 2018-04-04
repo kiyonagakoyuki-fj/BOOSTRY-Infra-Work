@@ -18,4 +18,4 @@ git clone https://github.com/ethereum/pyethereum/ issuer/pyethereum
 rm issuer/pyethereum/.python-version
 
 # docker build
-docker build -t issuer issuer/.
+sudo docker build -t issuer issuer/.
