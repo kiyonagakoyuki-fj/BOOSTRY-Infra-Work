@@ -5,31 +5,13 @@
 * https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-using-the-repository
 
 ```
-# 必要パッケージのインストール
-sudo apt-get update
-sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+git clone https://github.com/N-Village/tmr-docker.git
+cd tmr-docker
+./installer/docker-installer.sh
 
-# GPG鍵の取得
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-
-# dockerのソースリストの更新
-sudo add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable"
-
-# docker-engineのインストール
-sudo apt-get update
-sudo apt-get install docker-ce
-```
-
-* dockerグループにubuntuユーザを追加する
-
-```
-sudo usermod -aG docker $USER
+# ubuntuユーザでdockerコマンドを利用する場合に実行。passwordがない環境の場合は、再ログインが必要。
 su - $USER
 ```
-※passwordがない環境の場合は、再度ログイン。
 
 ### 1.2. docker-composeインストール (現時点で未使用のため、実施しなくていい)
 ```
@@ -38,19 +20,14 @@ sudo chmod +x /usr/local/bin/docker-compose
 docker-compose -v
 ```
 
-### 1.3. tmr-dockerリポジトリのクローン
+### 1.3. quorumコンテナ作成
+#### 1.3.1. docker image作成
 ```
-git clone https://github.com/N-Village/tmr-docker.git
-```
-
-### 1.4. quorumコンテナ作成
-#### 1.4.1. docker image作成
-```
-cd tmr-docker/quorum
+cd quorum
 docker build -t quorum .
 ```
 
-#### 1.4.2. istanbul用ノードの設定
+#### 1.3.2. istanbul用ノードの設定
 * 初期ノードの設定を新規で行う場合は、istanbul-toolsを入れてノード生成処理を実施する。
 * ソース：https://github.com/getamis/istanbul-tools
 * ※Goが必要
@@ -62,7 +39,7 @@ cd /home/ubuntu/gowork/src/github.com/getamis/istanbul-tools
 
 * 「static-nodes.json」「nodekeyA～D」「istanbul-genesis.json」を修正。
 
-#### 1.4.3. quorum設定・起動
+#### 1.3.3. quorum設定・起動
 * ノード稼動環境のIPアドレスに合わせて、「tmconf/tmA～D.conf」、「static-nodes.json」のIPアドレスを修正する。
 * 修正後、下記コマンドを実行。引数はノードA~Dで変更する。
 
@@ -74,7 +51,7 @@ cd /home/ubuntu/gowork/src/github.com/getamis/istanbul-tools
 tail -f qdata/logs/geth.log
 ```
 
-#### 1.4.4. account作成・・・A(発行体ノード)、C・D（サトシナカモトノード）で実施
+#### 1.3.4. account作成・・・A(発行体ノード)、C・D（サトシナカモトノード）で実施
 * 以下のスクリプトを実行する。
 
 ```
@@ -84,7 +61,7 @@ tail -f qdata/logs/geth.log
 * 実行結果として、アカウントが出力されるので、控えておく。
 
 
-#### 1.4.5. コントラクトの登録
+#### 1.3.5. コントラクトの登録
 * サトシナカモトノードをアンロックし、Remix等からコントラクトを登録する。
 * アカウントのアンロックは以下のようにして行う。
 
