@@ -16,6 +16,9 @@ if ( [ `sudo docker ps -a --filter "name=postgres" | wc -l` -ne 2  ] ); then
 fi
 
 # issuerコンテナ作成
+rm -rf issuer/tmr-issuer
+rm -rf issuer/pyenv
+rm -rf issuer/pyethereum
 git clone https://github.com/N-Village/tmr-issuer.git issuer/tmr-issuer
 git clone https://github.com/pyenv/pyenv.git issuer/pyenv
 git clone https://github.com/ethereum/pyethereum/ issuer/pyethereum
