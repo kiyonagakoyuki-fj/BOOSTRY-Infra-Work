@@ -192,10 +192,10 @@ docker run -it --rm -d --name issuer --link postgres:postgres \
                                      -e DATABASE_URL=postgresql://apluser:apluserpass@postgres:5432/apldb \
                                      -e WEB3_HTTP_PROVIDER=http://quorum:8545 \
                                      -e ETH_ACCOUNT_PASSWORD=nvillage201803+ \
-                                     -e TOKEN_LIST_CONTRACT_ADDRESS=0x4fc3941701a8b193fa6ab41b19b8a07b024fb578 \
+                                     -e TOKEN_LIST_CONTRACT_ADDRESS=0x492bb01ff36ecb6848f7a0c214886d172706431a \
                                      -e PERSONAL_INFO_CONTRACT_ADDRESS=0x358442a720a96987d25b9d7e07ec57a7d301a276 \
                                      -e WHITE_LIST_CONTRACT_ADDRESS=0x8337fa10730b22f3cffa6b9ec53bc7f098041e25 \
-                                     -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x9abe8e37a1d52d8e140257ed057d4afa4f121d58 \
+                                     -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x5daad7f8a070cbaf8a1c15f5964f64196b1cf907 \
                                      -e AGENT_ADDRESS=0x9982f688af88ee715015dc3d351d8cdc23024ff4 \
                                      -e RSA_PASSWORD=password \
                                      -p 5000:5000 \
@@ -255,9 +255,9 @@ docker run -it --rm -d --name api --link postgres:postgres \
 docker run -it --rm -d --name api --link postgres:postgres \
                                      --link quorum:quorum \
                                      -e APP_ENV=live \
-                                     -e TOKEN_LIST_CONTRACT_ADDRESS=0x4fc3941701a8b193fa6ab41b19b8a07b024fb578 \
+                                     -e TOKEN_LIST_CONTRACT_ADDRESS=0x492bb01ff36ecb6848f7a0c214886d172706431a \
                                      -e PERSONAL_INFO_CONTRACT_ADDRESS=0x358442a720a96987d25b9d7e07ec57a7d301a276 \
-                                     -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x9abe8e37a1d52d8e140257ed057d4afa4f121d58 \
+                                     -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x5daad7f8a070cbaf8a1c15f5964f64196b1cf907 \
                                      -e WHITE_LIST_CONTRACT_ADDRESS=0x8337fa10730b22f3cffa6b9ec53bc7f098041e25 \
                                      -p 5000:5000 api
 ```
