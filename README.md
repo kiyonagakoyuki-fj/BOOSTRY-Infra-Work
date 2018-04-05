@@ -226,13 +226,6 @@ docker run -it --rm -d --name issuer --link postgres:postgres \
 ### 3.2 nginxコンテナ
 ※POCでは未使用
 
-### 3.3 issuerコンテナ（ワンクリック編）
-ホストマシン上にRSA鍵（`/home/ubuntu/tmr-docker/issuer/data/rsa/private.pem`）を作成して保存する。
-```
-./installer/issuer-installer.sh
-```
-
-
 ### 3.3 issuerコンテナ更新手順
 ```
 # ソース更新
@@ -247,6 +240,12 @@ docker rmi issuer
 ```
 
 * 上記を実施後に、docker build & docker run
+
+### 3.4 issuerコンテナ起動（ワンクリック編）
+ホストマシン上にRSA鍵（`/home/ubuntu/tmr-docker/issuer/data/rsa/private.pem`）を作成して保存する。
+```
+./installer/issuer-installer.sh
+```
 
 
 ## 4. 【APIノードのみで実施】その他の環境構築
