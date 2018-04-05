@@ -29,10 +29,7 @@ sudo cp static-nodes.json qdata/dd/permissioned-nodes.json
 
 # istanbul.propose;
 if [[ "$NODE_TYPE" == "validator" ]]; then
-sudo docker run --rm -v $pwd/qdata:/qdata quorum geth attach qdata/dd/geth.ipc <<END
-istanbul.propose("$COINBASE", true)
-exit
-END
+  sudo docker run --rm -v $pwd/qdata:/qdata quorum geth attach qdata/dd/geth.ipc --exec "istanbul.propose('$COINBASE', true)"
 fi
 
 # 結果出力

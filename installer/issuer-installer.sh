@@ -33,7 +33,7 @@ sudo docker run --rm --link postgres:postgres --link quorum:quorum \
                     -e WEB3_HTTP_PROVIDER=http://quorum:8545  -v $pwd/installer:/installer issuer /installer/issuer-migrate.sh
 
 # 起動
-docker run -it --rm -d --name issuer --link postgres:postgres \
+sudo docker run -it --rm -d --name issuer --link postgres:postgres \
                                      --link quorum:quorum \
                                      -e FLASK_CONFIG=production \
                                      -e DATABASE_URL=postgresql://apluser:apluserpass@postgres:5432/apldb \

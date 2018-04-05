@@ -68,11 +68,7 @@ sudo docker run --rm -d --name quorum -v $pwd/qdata:/qdata -p 9000:9000 -p 21000
 sleep 15
 
 # coinbase取得
-coinbase=`sudo docker run --rm -v $pwd/qdata:/qdata quorum geth attach qdata/dd/geth.ipc <<END
-eth.coinbase
-exit
-END`
-coinbase=`echo "$coinbase" | grep "coinbase"`
+coinbase=`sudo docker run --rm -v $pwd/qdata:/qdata quorum geth attach qdata/dd/geth.ipc --exec "eth.coinbase"`
 
 # 結果出力
 echo "quorumノードの起動完了"
