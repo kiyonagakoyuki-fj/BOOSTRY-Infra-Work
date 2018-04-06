@@ -16,6 +16,9 @@ ENODE_ID="$1"
 COINBASE="$2"
 NODE_TYPE="$3"
 
+# admin.removePeer
+sudo docker run --rm -v $pwd/qdata:/qdata quorum geth attach qdata/dd/geth.ipc --exec "admin.removePeer('$ENODE_ID')"
+
 # static-nodes.jsonからノードを削除
 del_flg=0
 i=1
