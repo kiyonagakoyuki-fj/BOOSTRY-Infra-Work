@@ -16,6 +16,11 @@ ENODE_ID="$1"
 COINBASE="$2"
 NODE_TYPE="$3"
 
+# istanbul.propose;
+if [[ "$NODE_TYPE" == "validator" ]]; then
+  sudo docker run --rm -v $pwd/qdata:/qdata quorum geth attach qdata/dd/geth.ipc --exec "istanbul.propose('$COINBASE', false)"
+fi
+
 # admin.removePeer
 sudo docker run --rm -v $pwd/qdata:/qdata quorum geth attach qdata/dd/geth.ipc --exec "admin.removePeer('$ENODE_ID')"
 
@@ -44,11 +49,6 @@ done < static-nodes.json
 sudo echo -e "$STATIC_NODES" >|static-nodes.json
 sudo cp static-nodes.json qdata/dd/static-nodes.json
 sudo cp static-nodes.json qdata/dd/permissioned-nodes.json
-
-# istanbul.propose;
-if [[ "$NODE_TYPE" == "validator" ]]; then
-  sudo docker run --rm -v $pwd/qdata:/qdata quorum geth attach qdata/dd/geth.ipc --exec "istanbul.propose('$COINBASE', false)"
-fi
 
 # 結果出力
 echo "quorumノードの削除完了"
