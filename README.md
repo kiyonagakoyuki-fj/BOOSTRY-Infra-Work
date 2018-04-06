@@ -89,14 +89,24 @@ eth.contract(<contract_address>)
 ```
 
 #### 1.4.2. quorum-add-node（既存ノードで実施）
-・追加するノードがvalidatorの場合、2f+1のvalidatorノードで実施。
-・追加するノードがgeneralの場合、既存ノード1つで実施。
+追加するノードがvalidatorの場合、2f+1のvalidatorノードで実施。追加するノードがgeneralの場合、既存ノード1つで実施。
 ```
 ./installer/quorum-add-node.sh <enode id> <coinbase> <NODE_TYPE>
 
 # 例
 ./installer/quorum-add-node.sh enode://61b6504917fe9e0a195d9d1aaa585cc77422fe3fa73df82df844a714ba96c703013698ceeddaffce16eabfceb8d8203d2e51cc3065f4356fea04c19049271a92@10.0.0.15:21000?discport=0 0x4eeb101c248799982be84af6bf16cbac97f1882d validator
 ```
+
+### 1.5. ノード削除
+削除したいノードが接続されているノードで実施。
+```
+./installer/quorum-remove-node.sh <enode id> <coinbase> <NODE_TYPE>
+
+# 例
+./installer/quorum-remove-node.sh enode://61b6504917fe9e0a195d9d1aaa585cc77422fe3fa73df82df844a714ba96c703013698ceeddaffce16eabfceb8d8203d2e51cc3065f4356fea04c19049271a92@10.0.0.15:21000?discport=0 0x4eeb101c248799982be84af6bf16cbac97f1882d validator
+```
+
+
 
 ## 2. 【ISSUERノード & APIノードで実施】DB（PostgreSQL）構築
 ### 2.1. PostgreSQLコンテナ起動
