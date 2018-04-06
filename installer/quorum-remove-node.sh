@@ -38,7 +38,7 @@ do
   i=$((i + 1))
 done < static-nodes.json
 
-sudo -e echo "$STATIC_NODES" >|static-nodes.json
+sudo echo -e "$STATIC_NODES" >|static-nodes.json
 sudo cp static-nodes.json qdata/dd/static-nodes.json
 sudo cp static-nodes.json qdata/dd/permissioned-nodes.json
 
