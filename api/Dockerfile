@@ -40,11 +40,6 @@ RUN apt clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY pyenv /home/apl/.pyenv/
 RUN chown -R apl:apl /home/apl
-COPY pyethereum /code/pyethereum
-RUN chown -R apl:apl /code
-COPY tmr-node /app/tmr-node
-RUN chown -R apl:apl /app/tmr-node && \
-    chmod 755 /app/tmr-node
 
 # install pyenv
 USER apl
@@ -59,15 +54,23 @@ RUN . ~/.bash_profile \
  && pyenv global 3.6.2 \
  && pip install --upgrade pip
 
+# requirements
+COPY tmr-node/requirements.txt /app/requirements.txt
+RUN . ~/.bash_profile \
+ && pip install -r /app/requirements.txt
+
 # pyethereum
+COPY pyethereum /code/pyethereum
+RUN chown -R apl:apl /code
 RUN . ~/.bash_profile \
  && cd code/pyethereum \
  && python setup.py install
 
 # app
+COPY tmr-node /app/tmr-node
+RUN chown -R apl:apl /app/tmr-node && \
+    chmod 755 /app/tmr-node
 COPY run.sh /app/
-RUN . ~/.bash_profile \
- && pip install -r /app/tmr-node/requirements.txt
 
 EXPOSE 5000
 
