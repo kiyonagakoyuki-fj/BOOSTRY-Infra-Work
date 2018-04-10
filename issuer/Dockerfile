@@ -40,11 +40,6 @@ RUN apt clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY pyenv /home/apl/.pyenv/
 RUN chown -R apl:apl /home/apl
-COPY pyethereum /code/pyethereum
-RUN chown -R apl:apl /code
-COPY tmr-issuer /app/tmr-issuer
-RUN chown -R apl:apl /app/tmr-issuer && \
-    chmod 755 /app/tmr-issuer
 
 # install pyenv
 USER apl
@@ -53,23 +48,33 @@ RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~apl/.bash_profile \
  && echo 'eval "$(pyenv init -)"' >> ~apl/.bash_profile \
  && echo 'export LANG=ja_JP.utf8' >> ~apl/.bash_profile
 
-
 # install python & package
 RUN . ~/.bash_profile \
  && pyenv install 3.6.2 \
  && pyenv global 3.6.2 \
  && pip install --upgrade pip
 
+# requirements
+COPY tmr-issuer/requirements.txt /app/requirements.txt
+RUN . ~/.bash_profile \
+ && pip install -r /app/requirements.txt
+
 # pyethereum
+USER root
+COPY pyethereum /code/pyethereum
+RUN chown -R apl:apl /code
+USER apl
 RUN . ~/.bash_profile \
  && cd code/pyethereum \
  && python setup.py install
 
 # app
+USER root
+COPY tmr-issuer /app/tmr-issuer
+RUN chown -R apl:apl /app/tmr-issuer && \
+    chmod 755 /app/tmr-issuer
+USER apl
 COPY run.sh /app/
-#COPY tmr-issuer/* /app/tmr-issuer/
-RUN . ~/.bash_profile \
- && pip install -r /app/tmr-issuer/requirements.txt
 
 EXPOSE 5000
 
