@@ -60,16 +60,20 @@ RUN . ~/.bash_profile \
  && pip install -r /app/requirements.txt
 
 # pyethereum
+USER root
 COPY pyethereum /code/pyethereum
 RUN chown -R apl:apl /code
+USER apl
 RUN . ~/.bash_profile \
  && cd code/pyethereum \
  && python setup.py install
 
 # app
+USER root
 COPY tmr-node /app/tmr-node
 RUN chown -R apl:apl /app/tmr-node && \
     chmod 755 /app/tmr-node
+USER apl
 COPY run.sh /app/
 
 EXPOSE 5000
