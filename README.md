@@ -34,15 +34,16 @@ docker build -t quorum .
   - Golangのバージョンが1.7以降にしなければMakeエラーが発生する
     - Ubuntu16.04LTSのapt-getではいるGolangのバージョンのデフォルトは1.6x
     - 明示的にapt-get installで1.7以降を取得する必要がある
-      - ```sudo apt-get install golang-1.9```
+      - ```$ sudo apt-get install golang-1.9```
       - この方法で入れると/user/bin/goからのシンボリックが通っていないのでgo versionをしてもエラーとなる
       * 明示的にシンボリックリンクを設定すること
-        - ```
+        ```
         $ sudo ln -s /usr/lib/go-1.9/bin/go /usr/bin/go
         $ go version
         go version go1.9.2 linux/amd64
         ```
-* ```
+* 下記の通り、Buildを実行
+```
 cd /home/ubuntu/gowork/src/github.com/getamis/istanbul-tools
 ./build/bin/istanbul setup --num 4 --nodes --verbose --quorum
 ```
