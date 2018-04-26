@@ -6,6 +6,7 @@
         "eip150Hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
         "eip155Block": 3,
         "eip158Block": 3,
+        "byzantiumBlock": 3,
         "istanbul": {
             "epoch": 30000,
             "policy": 0

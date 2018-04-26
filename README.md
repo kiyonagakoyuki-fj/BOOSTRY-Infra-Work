@@ -262,7 +262,7 @@ docker rmi issuer
 ### 4.1. APIコンテナ
 #### 4.1.1. docker image作成
 ```
-cd /home/ubuntu/tmr-docker/api
+cd /home/ubuntu/tmr-docker/node
 
 # 必要なソースを取得
 git clone https://github.com/N-Village/tmr-node.git
