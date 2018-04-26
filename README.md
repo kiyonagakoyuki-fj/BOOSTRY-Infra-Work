@@ -30,8 +30,19 @@ docker build -t quorum .
 #### 1.3.2. istanbul用ノードの設定
 * 初期ノードの設定を新規で行う場合は、istanbul-toolsを入れてノード生成処理を実施する。
 * ソース：https://github.com/getamis/istanbul-tools
-* ※Goが必要
-
+  - ※Goが必要
+  - Golangのバージョンが1.7以降にしなければMakeエラーが発生する
+    - Ubuntu16.04LTSのapt-getではいるGolangのバージョンのデフォルトは1.6x
+    - 明示的にapt-get installで1.7以降を取得する必要がある
+      - ```$ sudo apt-get install golang-1.9```
+      - この方法で入れると/user/bin/goからのシンボリックが通っていないのでgo versionをしてもエラーとなる
+      * 明示的にシンボリックリンクを設定すること
+        ```
+        $ sudo ln -s /usr/lib/go-1.9/bin/go /usr/bin/go
+        $ go version
+        go version go1.9.2 linux/amd64
+        ```
+* 下記の通り、Buildを実行
 ```
 cd /home/ubuntu/gowork/src/github.com/getamis/istanbul-tools
 ./build/bin/istanbul setup --num 4 --nodes --verbose --quorum
@@ -226,7 +237,7 @@ docker run -it --rm -d --name issuer --link postgres:postgres \
                                      -e TOKEN_LIST_CONTRACT_ADDRESS=0x492bb01ff36ecb6848f7a0c214886d172706431a \
                                      -e PERSONAL_INFO_CONTRACT_ADDRESS=0x358442a720a96987d25b9d7e07ec57a7d301a276 \
                                      -e WHITE_LIST_CONTRACT_ADDRESS=0x8337fa10730b22f3cffa6b9ec53bc7f098041e25 \
-                                     -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x5daad7f8a070cbaf8a1c15f5964f64196b1cf907 \
+                                     -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0xac8fdccb3b4ee80fa792fd025e4af5a7fab3bdcd \
                                      -e AGENT_ADDRESS=0x9982f688af88ee715015dc3d351d8cdc23024ff4 \
                                      -e RSA_PASSWORD=password \
                                      -p 5000:5000 \
@@ -294,7 +305,7 @@ docker run -it --rm -d --name api --link postgres:postgres \
                                      -e APP_ENV=live \
                                      -e TOKEN_LIST_CONTRACT_ADDRESS=0x492bb01ff36ecb6848f7a0c214886d172706431a \
                                      -e PERSONAL_INFO_CONTRACT_ADDRESS=0x358442a720a96987d25b9d7e07ec57a7d301a276 \
-                                     -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0x5daad7f8a070cbaf8a1c15f5964f64196b1cf907 \
+                                     -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0xac8fdccb3b4ee80fa792fd025e4af5a7fab3bdcd \
                                      -e WHITE_LIST_CONTRACT_ADDRESS=0x8337fa10730b22f3cffa6b9ec53bc7f098041e25 \
                                      -p 5000:5000 api
 ```
@@ -352,15 +363,18 @@ docker run -it --rm —name bank —link quorum:quorum \
               -e WEB3_HTTP_PROVIDER=http://quorum:8545 \
               -e WHITE_LIST_CONTRACT_ADDRESS=<contractアドレス> \
               -e AGENT_ADDRESS= <決済業者のアドレス> \
+              -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=<contractアドレス> \
               bank bash
 ```
 
 * 直近のPOC用環境は以下の設定で起動している。
 
 ```
-docker run -it --rm —name bank —link quorum:quorum \
-              -e WEB3_HTTP_PROVIDER=http://quorum:8545 \
-              -e WHITE_LIST_CONTRACT_ADDRESS=0x8337fa10730b22f3cffa6b9ec53bc7f098041e25 \
-              -e AGENT_ADDRESS= 0x9982f688af88ee715015dc3d351d8cdc23024ff4 \
-              bank bash
+docker run -it --rm --name bank --link quorum:quorum \
+                -e WEB3_HTTP_PROVIDER=http://quorum:8545 \
+                -e WHITE_LIST_CONTRACT_ADDRESS=0x8337fa10730b22f3cffa6b9ec53bc7f098041e25 \
+                -e AGENT_ADDRESS=0x9982f688af88ee715015dc3d351d8cdc23024ff4 \
+                -e IBET_SB_EXCHANGE_CONTRACT_ADDRESS=0xac8fdccb3b4ee80fa792fd025e4af5a7fab3bdcd \
+                -v /home/ubuntu/tmr-docker/bank/data:/app/tmr-bank/data \
+                bank /bin/bash
 ```
