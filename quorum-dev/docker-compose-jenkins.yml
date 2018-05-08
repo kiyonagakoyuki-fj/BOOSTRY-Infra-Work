@@ -13,8 +13,6 @@ services:
   validator-0:
     hostname: validator-0
     image: quorum-dev
-    volumes:
-      - /home/ubuntu/quorum_data/v0:/eth
     ports:
       - '30303:30303'
       - '8545:8545'
@@ -51,8 +49,6 @@ services:
   validator-1:
     hostname: validator-1
     image: quorum-dev
-    volumes:
-      - /home/ubuntu/quorum_data/v1:/eth
     ports:
       - '30304:30303'
       - '8546:8545'
@@ -89,8 +85,6 @@ services:
   validator-2:
     hostname: validator-2
     image: quorum-dev
-    volumes:
-      - /home/ubuntu/quorum_data/v2:/eth
     ports:
       - '30305:30303'
       - '8547:8545'
@@ -127,8 +121,6 @@ services:
   validator-3:
     hostname: validator-3
     image: quorum-dev
-    volumes:
-      - /home/ubuntu/quorum_data/v3:/eth
     ports:
       - '30306:30303'
       - '8548:8545'
