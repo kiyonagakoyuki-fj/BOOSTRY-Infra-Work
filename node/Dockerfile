@@ -59,15 +59,6 @@ COPY tmr-node/requirements.txt /app/requirements.txt
 RUN . ~/.bash_profile \
  && pip install -r /app/requirements.txt
 
-# pyethereum
-USER root
-COPY pyethereum /code/pyethereum
-RUN chown -R apl:apl /code
-USER apl
-RUN . ~/.bash_profile \
- && cd code/pyethereum \
- && python setup.py install
-
 # app
 USER root
 COPY tmr-node /app/tmr-node
