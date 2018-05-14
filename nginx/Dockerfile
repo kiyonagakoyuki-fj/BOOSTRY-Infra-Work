@@ -7,7 +7,6 @@ ADD ./auth.htpasswd /etc/nginx/auth.htpasswd
 
 RUN chmod 755 -R /var
 RUN chmod 400 /etc/nginx/server.key
-RUN mkdir /var/logs
 
 EXPOSE 443
 CMD ["nginx", "-g", "daemon off;"]
