@@ -29,16 +29,17 @@ RUN apt-get update -q \
  libgmp-dev \
  language-pack-ja-base \
  language-pack-ja \
- jq
+ libyaml-cpp-dev && \
+ apt-get install -y software-properties-common && \
+ add-apt-repository -y ppa:ethereum/ethereum && \
+ apt-get update -y && \
+ apt-get install -y solc
 
 # remove unnessesory package files
 RUN apt clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY pyenv /home/apl/.pyenv/
 RUN chown -R apl:apl /home/apl
-COPY tmr-bank /app/tmr-bank
-RUN chown -R apl:apl /app/tmr-bank && \
-    chmod 755 /app/tmr-bank
 
 # install pyenv
 USER apl
@@ -49,11 +50,23 @@ RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~apl/.bash_profile \
 
 # install python & package
 RUN . ~/.bash_profile \
- && pyenv install 3.6.3 \
- && pyenv global 3.6.3 \
+ && pyenv install 3.6.2 \
+ && pyenv global 3.6.2 \
  && pip install --upgrade pip
 
-# app
+# requirements
+COPY tmr-bank/requirements.txt /app/requirements.txt
 RUN . ~/.bash_profile \
- && pip install -r /app/tmr-bank/requirements.txt
- 
+ && pip install -r /app/requirements.txt
+
+# app
+USER root
+COPY tmr-bank /app/tmr-bank
+RUN chown -R apl:apl /app/tmr-bank && \
+    chmod 755 /app/tmr-bank
+USER apl
+COPY run.sh /app/
+
+EXPOSE 5000
+
+CMD /app/run.sh
