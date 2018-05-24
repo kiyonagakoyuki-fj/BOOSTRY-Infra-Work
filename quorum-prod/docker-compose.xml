@@ -1,0 +1,308 @@
+version: '3'
+services:
+  eth-stats:
+    image: quay.io/amis/ethstats:latest
+    ports:
+      - '3000:3000'
+    environment:
+      - WS_SECRET=bb98a0b6442386d0cdf8a31b267892c1
+    restart: always
+    networks:
+      app_net:
+        ipv4_address: 172.16.239.9
+  validator-0:
+    hostname: validator-0
+    image: quay.io/amis/quorum:feature_istanbul
+    ports:
+      - '30303:30303'
+      - '8545:8545'
+    volumes:
+      - 0:/constellation:z
+    depends_on:
+      - constellation-0
+    environment:
+      - PRIVATE_CONFIG=/constellation/tm.conf
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        mkdir -p /eth/geth
+        echo '{"config":{"chainId":2017,"homesteadBlock":1,"eip150Block":2,"eip150Hash":"0x0000000000000000000000000000000000000000000000000000000000000000","eip155Block":3,"eip158Block":3,"istanbul":{"epoch":30000,"policy":0},"isQuorum":true},"nonce":"0x0","timestamp":"0x5b065caa","extraData":"0x0000000000000000000000000000000000000000000000000000000000000000f89af85494c70e6b057628f2c481c3737f2bb6e81994fcc3f1947441e137eb650d162c62762d053f76a70df8049f9493291b70f1c71ddbfde7c9c8e0ae4e417e83b90d949d23e506091435bb6e65450d6f468640dd86bc71b8410000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c0","gasLimit":"0x47b760","difficulty":"0x1","mixHash":"0x63746963616c2062797a616e74696e65206661756c7420746f6c6572616e6365","coinbase":"0x0000000000000000000000000000000000000000","alloc":{"7441e137eb650d162c62762d053f76a70df8049f":{"balance":"0x446c3b15f9926687d2c40534fdb564000000000000"},"93291b70f1c71ddbfde7c9c8e0ae4e417e83b90d":{"balance":"0x446c3b15f9926687d2c40534fdb564000000000000"},"9d23e506091435bb6e65450d6f468640dd86bc71":{"balance":"0x446c3b15f9926687d2c40534fdb564000000000000"},"c70e6b057628f2c481c3737f2bb6e81994fcc3f1":{"balance":"0x446c3b15f9926687d2c40534fdb564000000000000"}},"number":"0x0","gasUsed":"0x0","parentHash":"0x0000000000000000000000000000000000000000000000000000000000000000"}' > /eth/genesis.json
+        echo '["enode://47dfd991ee8994524bdd891e0f25e2cf2071e4c89c541871c04341f831155e1f37acdab1b8138a1ffbfc5e3afddf185b3ea25e4b566de9ff92842abc89c8a386@172.16.239.10:30303?discport=0","enode://b7c7629eecb01f4f1fc8302cb0052d7bb348c0ea51885c2ac47b291bbf865901206b442adfe81d871bec0d0b3066625e985273a98487d3e4ec828421584ba6fe@172.16.239.11:30303?discport=0","enode://2fa42cf37aaaf4351f62ed52a4ec3530c4814fac8933f40dc3b4fa341f2258e171c78497f0a921149c3b2564844aed16220557375bfaf28b8f6cc34cefa93007@172.16.239.12:30303?discport=0","enode://9e09d9ef399d491fac4088fdaf98ee3b51762d77e88172656a82fb5aaf02081d4abd24e997a6479fb872abaff26b07b1522bd07f867632b155a0b1b70e455f88@172.16.239.13:30303?discport=0"]' > /eth/geth/static-nodes.json
+        geth --datadir "/eth" init "/eth/genesis.json"
+        geth \
+        --identity "validator-0" \
+        --rpc \
+        --rpcaddr "0.0.0.0" \
+        --rpcport "8545" \
+        --rpccorsdomain "*" \
+        --datadir "/eth" \
+        --port "30303" \
+        --rpcapi "db,eth,net,web3,istanbul,personal" \
+        --networkid "2017" \
+        --nat "any" \
+        --nodekeyhex "f99e7c06ed7714abb46915574688e877db0536a65c20971abe8c3339393d26e5" \
+        --mine \
+        --debug \
+        --metrics \
+        --syncmode "full" \
+        --ethstats "validator-0:bb98a0b6442386d0cdf8a31b267892c1@172.16.239.9:3000" \
+        --gasprice 0
+    networks:
+      app_net:
+        ipv4_address: 172.16.239.10
+    restart: always
+  constellation-0:
+    hostname: constellation-0
+    image: quay.io/amis/constellation:latest
+    ports:
+      - '10000:10000'
+    volumes:
+      - 0:/constellation:z
+      - .:/tmp/
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        mkdir -p /constellation
+        echo "socket=\"/constellation/tm.ipc\"\npublickeys=[\"/constellation/tm.pub\"]\n" > /constellation/tm.conf
+        constellation-node --generatekeys=/constellation/tm
+        cp /constellation/tm.pub /tmp/tm0.pub
+        constellation-node \
+          --url=http://172.16.239.100:10000/ \
+          --port=10000 \
+          --socket=/constellation/tm.ipc \
+          --othernodes=http://172.16.239.101:10001/,http://172.16.239.102:10002/,http://172.16.239.103:10003/ \
+          --publickeys=/constellation/tm.pub \
+          --privatekeys=/constellation/tm.key \
+          --storage=/constellation \
+          --verbosity=4
+    networks:
+      app_net:
+        ipv4_address: 172.16.239.100
+    restart: always
+  validator-1:
+    hostname: validator-1
+    image: quay.io/amis/quorum:feature_istanbul
+    ports:
+      - '30304:30303'
+      - '8546:8545'
+    volumes:
+      - 1:/constellation:z
+    depends_on:
+      - constellation-1
+    environment:
+      - PRIVATE_CONFIG=/constellation/tm.conf
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        mkdir -p /eth/geth
+        echo '{"config":{"chainId":2017,"homesteadBlock":1,"eip150Block":2,"eip150Hash":"0x0000000000000000000000000000000000000000000000000000000000000000","eip155Block":3,"eip158Block":3,"istanbul":{"epoch":30000,"policy":0},"isQuorum":true},"nonce":"0x0","timestamp":"0x5b065caa","extraData":"0x0000000000000000000000000000000000000000000000000000000000000000f89af85494c70e6b057628f2c481c3737f2bb6e81994fcc3f1947441e137eb650d162c62762d053f76a70df8049f9493291b70f1c71ddbfde7c9c8e0ae4e417e83b90d949d23e506091435bb6e65450d6f468640dd86bc71b8410000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c0","gasLimit":"0x47b760","difficulty":"0x1","mixHash":"0x63746963616c2062797a616e74696e65206661756c7420746f6c6572616e6365","coinbase":"0x0000000000000000000000000000000000000000","alloc":{"7441e137eb650d162c62762d053f76a70df8049f":{"balance":"0x446c3b15f9926687d2c40534fdb564000000000000"},"93291b70f1c71ddbfde7c9c8e0ae4e417e83b90d":{"balance":"0x446c3b15f9926687d2c40534fdb564000000000000"},"9d23e506091435bb6e65450d6f468640dd86bc71":{"balance":"0x446c3b15f9926687d2c40534fdb564000000000000"},"c70e6b057628f2c481c3737f2bb6e81994fcc3f1":{"balance":"0x446c3b15f9926687d2c40534fdb564000000000000"}},"number":"0x0","gasUsed":"0x0","parentHash":"0x0000000000000000000000000000000000000000000000000000000000000000"}' > /eth/genesis.json
+        echo '["enode://47dfd991ee8994524bdd891e0f25e2cf2071e4c89c541871c04341f831155e1f37acdab1b8138a1ffbfc5e3afddf185b3ea25e4b566de9ff92842abc89c8a386@172.16.239.10:30303?discport=0","enode://b7c7629eecb01f4f1fc8302cb0052d7bb348c0ea51885c2ac47b291bbf865901206b442adfe81d871bec0d0b3066625e985273a98487d3e4ec828421584ba6fe@172.16.239.11:30303?discport=0","enode://2fa42cf37aaaf4351f62ed52a4ec3530c4814fac8933f40dc3b4fa341f2258e171c78497f0a921149c3b2564844aed16220557375bfaf28b8f6cc34cefa93007@172.16.239.12:30303?discport=0","enode://9e09d9ef399d491fac4088fdaf98ee3b51762d77e88172656a82fb5aaf02081d4abd24e997a6479fb872abaff26b07b1522bd07f867632b155a0b1b70e455f88@172.16.239.13:30303?discport=0"]' > /eth/geth/static-nodes.json
+        geth --datadir "/eth" init "/eth/genesis.json"
+        geth \
+        --identity "validator-1" \
+        --rpc \
+        --rpcaddr "0.0.0.0" \
+        --rpcport "8545" \
+        --rpccorsdomain "*" \
+        --datadir "/eth" \
+        --port "30303" \
+        --rpcapi "db,eth,net,web3,istanbul,personal" \
+        --networkid "2017" \
+        --nat "any" \
+        --nodekeyhex "a0df8a34276040709a1aea0af5d6c92b6f5889fbd441acbbde603f165782d631" \
+        --mine \
+        --debug \
+        --metrics \
+        --syncmode "full" \
+        --ethstats "validator-1:bb98a0b6442386d0cdf8a31b267892c1@172.16.239.9:3000" \
+        --gasprice 0
+    networks:
+      app_net:
+        ipv4_address: 172.16.239.11
+    restart: always
+  constellation-1:
+    hostname: constellation-1
+    image: quay.io/amis/constellation:latest
+    ports:
+      - '10001:10001'
+    volumes:
+      - 1:/constellation:z
+      - .:/tmp/
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        mkdir -p /constellation
+        echo "socket=\"/constellation/tm.ipc\"\npublickeys=[\"/constellation/tm.pub\"]\n" > /constellation/tm.conf
+        constellation-node --generatekeys=/constellation/tm
+        cp /constellation/tm.pub /tmp/tm1.pub
+        constellation-node \
+          --url=http://172.16.239.101:10001/ \
+          --port=10001 \
+          --socket=/constellation/tm.ipc \
+          --othernodes=http://172.16.239.100:10000/,http://172.16.239.102:10002/,http://172.16.239.103:10003/ \
+          --publickeys=/constellation/tm.pub \
+          --privatekeys=/constellation/tm.key \
+          --storage=/constellation \
+          --verbosity=4
+    networks:
+      app_net:
+        ipv4_address: 172.16.239.101
+    restart: always
+  validator-2:
+    hostname: validator-2
+    image: quay.io/amis/quorum:feature_istanbul
+    ports:
+      - '30305:30303'
+      - '8547:8545'
+    volumes:
+      - 2:/constellation:z
+    depends_on:
+      - constellation-2
+    environment:
+      - PRIVATE_CONFIG=/constellation/tm.conf
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        mkdir -p /eth/geth
+        echo '{"config":{"chainId":2017,"homesteadBlock":1,"eip150Block":2,"eip150Hash":"0x0000000000000000000000000000000000000000000000000000000000000000","eip155Block":3,"eip158Block":3,"istanbul":{"epoch":30000,"policy":0},"isQuorum":true},"nonce":"0x0","timestamp":"0x5b065caa","extraData":"0x0000000000000000000000000000000000000000000000000000000000000000f89af85494c70e6b057628f2c481c3737f2bb6e81994fcc3f1947441e137eb650d162c62762d053f76a70df8049f9493291b70f1c71ddbfde7c9c8e0ae4e417e83b90d949d23e506091435bb6e65450d6f468640dd86bc71b8410000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c0","gasLimit":"0x47b760","difficulty":"0x1","mixHash":"0x63746963616c2062797a616e74696e65206661756c7420746f6c6572616e6365","coinbase":"0x0000000000000000000000000000000000000000","alloc":{"7441e137eb650d162c62762d053f76a70df8049f":{"balance":"0x446c3b15f9926687d2c40534fdb564000000000000"},"93291b70f1c71ddbfde7c9c8e0ae4e417e83b90d":{"balance":"0x446c3b15f9926687d2c40534fdb564000000000000"},"9d23e506091435bb6e65450d6f468640dd86bc71":{"balance":"0x446c3b15f9926687d2c40534fdb564000000000000"},"c70e6b057628f2c481c3737f2bb6e81994fcc3f1":{"balance":"0x446c3b15f9926687d2c40534fdb564000000000000"}},"number":"0x0","gasUsed":"0x0","parentHash":"0x0000000000000000000000000000000000000000000000000000000000000000"}' > /eth/genesis.json
+        echo '["enode://47dfd991ee8994524bdd891e0f25e2cf2071e4c89c541871c04341f831155e1f37acdab1b8138a1ffbfc5e3afddf185b3ea25e4b566de9ff92842abc89c8a386@172.16.239.10:30303?discport=0","enode://b7c7629eecb01f4f1fc8302cb0052d7bb348c0ea51885c2ac47b291bbf865901206b442adfe81d871bec0d0b3066625e985273a98487d3e4ec828421584ba6fe@172.16.239.11:30303?discport=0","enode://2fa42cf37aaaf4351f62ed52a4ec3530c4814fac8933f40dc3b4fa341f2258e171c78497f0a921149c3b2564844aed16220557375bfaf28b8f6cc34cefa93007@172.16.239.12:30303?discport=0","enode://9e09d9ef399d491fac4088fdaf98ee3b51762d77e88172656a82fb5aaf02081d4abd24e997a6479fb872abaff26b07b1522bd07f867632b155a0b1b70e455f88@172.16.239.13:30303?discport=0"]' > /eth/geth/static-nodes.json
+        geth --datadir "/eth" init "/eth/genesis.json"
+        geth \
+        --identity "validator-2" \
+        --rpc \
+        --rpcaddr "0.0.0.0" \
+        --rpcport "8545" \
+        --rpccorsdomain "*" \
+        --datadir "/eth" \
+        --port "30303" \
+        --rpcapi "db,eth,net,web3,istanbul,personal" \
+        --networkid "2017" \
+        --nat "any" \
+        --nodekeyhex "b088e0561a48bd203f0d6359b7496f5c41eed7ccaac3a465c0d80272abeaf75b" \
+        --mine \
+        --debug \
+        --metrics \
+        --syncmode "full" \
+        --ethstats "validator-2:bb98a0b6442386d0cdf8a31b267892c1@172.16.239.9:3000" \
+        --gasprice 0
+    networks:
+      app_net:
+        ipv4_address: 172.16.239.12
+    restart: always
+  constellation-2:
+    hostname: constellation-2
+    image: quay.io/amis/constellation:latest
+    ports:
+      - '10002:10002'
+    volumes:
+      - 2:/constellation:z
+      - .:/tmp/
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        mkdir -p /constellation
+        echo "socket=\"/constellation/tm.ipc\"\npublickeys=[\"/constellation/tm.pub\"]\n" > /constellation/tm.conf
+        constellation-node --generatekeys=/constellation/tm
+        cp /constellation/tm.pub /tmp/tm2.pub
+        constellation-node \
+          --url=http://172.16.239.102:10002/ \
+          --port=10002 \
+          --socket=/constellation/tm.ipc \
+          --othernodes=http://172.16.239.100:10000/,http://172.16.239.101:10001/,http://172.16.239.103:10003/ \
+          --publickeys=/constellation/tm.pub \
+          --privatekeys=/constellation/tm.key \
+          --storage=/constellation \
+          --verbosity=4
+    networks:
+      app_net:
+        ipv4_address: 172.16.239.102
+    restart: always
+  validator-3:
+    hostname: validator-3
+    image: quay.io/amis/quorum:feature_istanbul
+    ports:
+      - '30306:30303'
+      - '8548:8545'
+    volumes:
+      - 3:/constellation:z
+    depends_on:
+      - constellation-3
+    environment:
+      - PRIVATE_CONFIG=/constellation/tm.conf
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        mkdir -p /eth/geth
+        echo '{"config":{"chainId":2017,"homesteadBlock":1,"eip150Block":2,"eip150Hash":"0x0000000000000000000000000000000000000000000000000000000000000000","eip155Block":3,"eip158Block":3,"istanbul":{"epoch":30000,"policy":0},"isQuorum":true},"nonce":"0x0","timestamp":"0x5b065caa","extraData":"0x0000000000000000000000000000000000000000000000000000000000000000f89af85494c70e6b057628f2c481c3737f2bb6e81994fcc3f1947441e137eb650d162c62762d053f76a70df8049f9493291b70f1c71ddbfde7c9c8e0ae4e417e83b90d949d23e506091435bb6e65450d6f468640dd86bc71b8410000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c0","gasLimit":"0x47b760","difficulty":"0x1","mixHash":"0x63746963616c2062797a616e74696e65206661756c7420746f6c6572616e6365","coinbase":"0x0000000000000000000000000000000000000000","alloc":{"7441e137eb650d162c62762d053f76a70df8049f":{"balance":"0x446c3b15f9926687d2c40534fdb564000000000000"},"93291b70f1c71ddbfde7c9c8e0ae4e417e83b90d":{"balance":"0x446c3b15f9926687d2c40534fdb564000000000000"},"9d23e506091435bb6e65450d6f468640dd86bc71":{"balance":"0x446c3b15f9926687d2c40534fdb564000000000000"},"c70e6b057628f2c481c3737f2bb6e81994fcc3f1":{"balance":"0x446c3b15f9926687d2c40534fdb564000000000000"}},"number":"0x0","gasUsed":"0x0","parentHash":"0x0000000000000000000000000000000000000000000000000000000000000000"}' > /eth/genesis.json
+        echo '["enode://47dfd991ee8994524bdd891e0f25e2cf2071e4c89c541871c04341f831155e1f37acdab1b8138a1ffbfc5e3afddf185b3ea25e4b566de9ff92842abc89c8a386@172.16.239.10:30303?discport=0","enode://b7c7629eecb01f4f1fc8302cb0052d7bb348c0ea51885c2ac47b291bbf865901206b442adfe81d871bec0d0b3066625e985273a98487d3e4ec828421584ba6fe@172.16.239.11:30303?discport=0","enode://2fa42cf37aaaf4351f62ed52a4ec3530c4814fac8933f40dc3b4fa341f2258e171c78497f0a921149c3b2564844aed16220557375bfaf28b8f6cc34cefa93007@172.16.239.12:30303?discport=0","enode://9e09d9ef399d491fac4088fdaf98ee3b51762d77e88172656a82fb5aaf02081d4abd24e997a6479fb872abaff26b07b1522bd07f867632b155a0b1b70e455f88@172.16.239.13:30303?discport=0"]' > /eth/geth/static-nodes.json
+        geth --datadir "/eth" init "/eth/genesis.json"
+        geth \
+        --identity "validator-3" \
+        --rpc \
+        --rpcaddr "0.0.0.0" \
+        --rpcport "8545" \
+        --rpccorsdomain "*" \
+        --datadir "/eth" \
+        --port "30303" \
+        --rpcapi "db,eth,net,web3,istanbul,personal" \
+        --networkid "2017" \
+        --nat "any" \
+        --nodekeyhex "639185d57a3c6183f5bbf6293badf639fd8e0fa52b4c77769b1de044afc01cfe" \
+        --mine \
+        --debug \
+        --metrics \
+        --syncmode "full" \
+        --ethstats "validator-3:bb98a0b6442386d0cdf8a31b267892c1@172.16.239.9:3000" \
+        --gasprice 0
+    networks:
+      app_net:
+        ipv4_address: 172.16.239.13
+    restart: always
+  constellation-3:
+    hostname: constellation-3
+    image: quay.io/amis/constellation:latest
+    ports:
+      - '10003:10003'
+    volumes:
+      - 3:/constellation:z
+      - .:/tmp/
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        mkdir -p /constellation
+        echo "socket=\"/constellation/tm.ipc\"\npublickeys=[\"/constellation/tm.pub\"]\n" > /constellation/tm.conf
+        constellation-node --generatekeys=/constellation/tm
+        cp /constellation/tm.pub /tmp/tm3.pub
+        constellation-node \
+          --url=http://172.16.239.103:10003/ \
+          --port=10003 \
+          --socket=/constellation/tm.ipc \
+          --othernodes=http://172.16.239.100:10000/,http://172.16.239.101:10001/,http://172.16.239.102:10002/ \
+          --publickeys=/constellation/tm.pub \
+          --privatekeys=/constellation/tm.key \
+          --storage=/constellation \
+          --verbosity=4
+    networks:
+      app_net:
+        ipv4_address: 172.16.239.103
+    restart: always
+networks:
+  app_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.16.239.0/24
+volumes:
+  "0":
+  "1":
+  "2":
+  "3":

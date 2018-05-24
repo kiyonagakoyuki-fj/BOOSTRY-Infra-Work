@@ -66,5 +66,5 @@ COPY --from=builder \
 
 EXPOSE 30303/tcp 30303/udp 30304/udp 8545/tcp 8546/tcp
 
-COPY run.sh /
+COPY run.sh /run.sh
 CMD /run.sh
