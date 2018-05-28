@@ -12,10 +12,12 @@ geth \
 --datadir "/eth" \
 --port "30303" \
 --rpcapi "db,eth,net,web3,istanbul,personal" \
---networkid "2017" \
+--networkid "1500002" \
 --nat "any" \
 --nodekeyhex $nodekeyhex \
 --mine \
 --syncmode "full" \
---gasprice 0
+--gasprice 0 \
+--cache 1024 \
+--verbosity 2
 
