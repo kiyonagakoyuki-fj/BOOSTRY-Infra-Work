@@ -154,13 +154,9 @@ postgres=# \l
 ### 3.1. issuerコンテナ（手作業編）
 ### 3.1.1. docker image作成
 ```
-cd /home/ubuntu/tmr-docker/issuer
-
-# 必要なソースを取得
+cd /home/ubuntu/
 git clone https://github.com/N-Village/tmr-issuer.git
-git clone https://github.com/pyenv/pyenv.git
-git clone https://github.com/ethereum/pyethereum/
-rm pyethereum/.python-version
+cd tmr-issuer
 
 # docker build
 docker build -t issuer .
@@ -250,7 +246,7 @@ docker run -it --rm -d --name issuer --link postgres:postgres \
 ### 3.3 issuerコンテナ更新手順
 ```
 # ソース更新
-cd /home/ubuntu/tmr-docker/issuer/tmr-issuer
+cd /home/ubuntu/tmr-issuer
 git pull origin master
 
 # コンテナ停止
@@ -273,13 +269,9 @@ docker rmi issuer
 ### 4.1. APIコンテナ
 #### 4.1.1. docker image作成
 ```
-cd /home/ubuntu/tmr-docker/node
-
-# 必要なソースを取得
+cd /home/ubuntu/
 git clone https://github.com/N-Village/tmr-node.git
-git clone https://github.com/pyenv/pyenv.git
-git clone https://github.com/ethereum/pyethereum/
-rm pyethereum/.python-version
+cd tmr-node
 
 # docker build
 docker build -t api .
@@ -328,7 +320,7 @@ docker run -itd --rm --name nginx --link api:api -p 443:443 nginx
 ### 4.3. APIコンテナ更新手順
 ```
 # ソース更新
-cd /home/ubuntu/tmr-docker/api/tmr-node
+cd /home/ubuntu/tmr-node
 git pull origin master
 
 # コンテナ停止
@@ -345,11 +337,9 @@ docker rmi api
 #### 5.1.1. docker image作成
 
 ```
-cd /home/ubuntu/tmr-docker/bank
-
-# 必要なソースを取得
+cd /home/ubuntu
 git clone https://github.com/N-Village/tmr-bank.git
-git clone https://github.com/pyenv/pyenv.git
+cd tmr-bank
 
 # docker build
 docker build -t bank .
