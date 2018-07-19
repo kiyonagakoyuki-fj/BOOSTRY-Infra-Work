@@ -11,7 +11,7 @@ geth \
 --rpccorsdomain "*" \
 --datadir "/eth" \
 --port "30303" \
---rpcapi "db,eth,net,web3,istanbul,personal" \
+--rpcapi "db,eth,net,web3,istanbul,personal,debug" \
 --networkid "1500002" \
 --nat "any" \
 --nodekeyhex $nodekeyhex \
