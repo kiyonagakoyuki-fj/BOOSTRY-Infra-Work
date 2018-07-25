@@ -18,6 +18,5 @@ geth \
 --mine \
 --syncmode "full" \
 --gasprice 0 \
---cache 1024 \
 --verbosity 2
 
