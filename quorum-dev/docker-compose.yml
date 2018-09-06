@@ -12,7 +12,7 @@ services:
         ipv4_address: 172.16.239.9
   validator-0:
     hostname: validator-0
-    image: quorum-dev
+    image: 257258793156.dkr.ecr.ap-northeast-1.amazonaws.com/quorum:no_memory_leak
     volumes:
       - /home/ubuntu/quorum_data/v0:/eth
     ports:
@@ -50,7 +50,7 @@ services:
     restart: always
   validator-1:
     hostname: validator-1
-    image: quorum-dev
+    image: 257258793156.dkr.ecr.ap-northeast-1.amazonaws.com/quorum:no_memory_leak
     volumes:
       - /home/ubuntu/quorum_data/v1:/eth
     ports:
@@ -88,7 +88,7 @@ services:
     restart: always
   validator-2:
     hostname: validator-2
-    image: quorum-dev
+    image: 257258793156.dkr.ecr.ap-northeast-1.amazonaws.com/quorum:no_memory_leak
     volumes:
       - /home/ubuntu/quorum_data/v2:/eth
     ports:
@@ -126,7 +126,7 @@ services:
     restart: always
   validator-3:
     hostname: validator-3
-    image: quorum-dev
+    image: 257258793156.dkr.ecr.ap-northeast-1.amazonaws.com/quorum:no_memory_leak
     volumes:
       - /home/ubuntu/quorum_data/v3:/eth
     ports:
