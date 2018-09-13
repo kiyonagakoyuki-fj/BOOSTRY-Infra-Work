@@ -30,8 +30,9 @@ RUN wget -q https://storage.googleapis.com/golang/$GOREL && \
     mv go /usr/local/go && \
     rm -f $GOREL
 
-RUN git clone https://github.com/jpmorganchase/quorum.git && \
+RUN git clone https://github.com/hagishun/quorum.git && \
     cd quorum && \
+    git checkout 5e348757614abfa134c92db7a2cd9ec2454a912a && \
     make all && \
     cp build/bin/geth /usr/local/bin && \
     cp build/bin/bootnode /usr/local/bin && \
