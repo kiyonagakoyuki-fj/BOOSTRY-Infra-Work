@@ -368,3 +368,15 @@ docker run -it --rm --name bank --link quorum:quorum \
                 -v /home/ubuntu/tmr-docker/bank/data:/app/tmr-bank/data \
                 bank /bin/bash
 ```
+
+# nginx-proxy
+nginx proxyのwork_nginx配下で下記の作業を実施
+docker build .
+docker images
+AWSへログイン
+$(aws ecr get-login --profile ecr_push --no-include-email --region ap-northeast-1)
+docker tag [作成したImageのImageID] 257258793156.dkr.ecr.ap-northeast-1.amazonaws.com/nginx:[TAG]
+docker push 67ffa9b6c793 257258793156.dkr.ecr.ap-northeast-1.amazonaws.com/nginx:nodev2_20190304_2
+docker push  257258793156.dkr.ecr.ap-northeast-1.amazonaws.com/nginx:[TAG]
+
+
