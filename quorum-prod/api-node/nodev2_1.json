@@ -1,0 +1,177 @@
+{
+    "family": "nodev2_1",
+    "executionRoleArn": "arn:aws:iam::164220784832:role/executionTaskForECS",
+    "containerDefinitions": [
+        {
+            "name": "nodev2",
+            "image": "257258793156.dkr.ecr.ap-northeast-1.amazonaws.com/tmr-node:v0.5.3",
+            "cpu": 0,
+            "secrets": [
+                {
+                    "name": "DATABASE_URL",
+                    "valueFrom": "node_DATABASE_URL"
+                }
+              ],          
+            "environment": [
+                {
+                  "name": "AGENT_ADDRESS",
+                  "value": "0x263c201c5e4c5a4cbf9adc81f81f7c67408755e5"
+                },
+                {
+                  "name": "APP_ENV",
+                  "value": "live"
+                },
+                {
+                  "name": "IBET_CP_EXCHANGE_CONTRACT_ADDRESS",
+                  "value": "0xc6daf0cf72f1a32aef6bd7791174e7fd23dcc6ea"
+                },
+                {
+                  "name": "IBET_MEMBERSHIP_EXCHANGE_CONTRACT_ADDRESS",
+                  "value": "0xaf8fe100fd35151edf6fdd7c17f46d4105ecefb2"
+                },
+                {
+                  "name": "IBET_SB_EXCHANGE_CONTRACT_ADDRESS",
+                  "value": "0x634c8d685f85212a611925c1c5b61f128d91148c"
+                },
+                {
+                  "name": "OMISE_PUBLIC",
+                  "value": "pkey_test_5dk6jbmlwp8lc419fl6"
+                },
+                {
+                  "name": "OMISE_SECRET",
+                  "value": "skey_test_5dk6jbmm6eecay4oplw"
+                },
+                {
+                  "name": "PERSONAL_INFO_CONTRACT_ADDRESS",
+                  "value": "0xaf364cdc05a134a28c74b0f5b66daaf4e04969fc"
+                },
+                {
+                  "name": "SNS_APPLICATION_ARN",
+                  "value": "arn:aws:sns:ap-northeast-1:164220784832:app/APNS/ibetDevDistribution"
+                },
+                {
+                  "name": "TOKEN_LIST_CONTRACT_ADDRESS",
+                  "value": "0x3502948677466087c9f7895ab5b3a029f95f5ac6"
+                },
+                {
+                  "name": "WEB3_HTTP_PROVIDER",
+                  "value": "http://internal-node-int-alb-63416238.ap-northeast-1.elb.amazonaws.com:8545"
+                },
+                {
+                  "name": "WHITE_LIST_CONTRACT_ADDRESS",
+                  "value": "0x17f39775a30a5701dbcc2714a8047b1b36e8f0c9"
+                },
+                {
+                  "name": "WORKER_COUNT",
+                  "value": "8"
+                }
+              ],
+            "memoryReservation": 1024,
+            "portMappings": [
+                {
+                    "hostPort": 80,
+                    "protocol": "tcp",
+                    "containerPort": 5000
+                  }
+            ],
+            "essential": true,
+            "mountPoints": [],
+            "dockerLabels": {
+                "Name": "nodev2_1"
+              },
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                  "awslogs-group": "/ecs/nodev2_1",
+                  "awslogs-region": "ap-northeast-1",
+                  "awslogs-stream-prefix": "ecs"
+                }
+            }
+        },
+        {
+            "name": "notification_nodev2_1",
+            "image": "257258793156.dkr.ecr.ap-northeast-1.amazonaws.com/tmr-node:v0.5.2",
+            "cpu": 0,
+            "secrets": [
+                {
+                    "name": "DATABASE_URL",
+                    "valueFrom": "node_DATABASE_URL"
+                }
+              ],          
+            "environment": [
+                {
+                  "name": "AGENT_ADDRESS",
+                  "value": "0x263c201c5e4c5a4cbf9adc81f81f7c67408755e5"
+                },
+                {
+                  "name": "APP_ENV",
+                  "value": "live"
+                },
+                {
+                  "name": "IBET_CP_EXCHANGE_CONTRACT_ADDRESS",
+                  "value": "0xc6daf0cf72f1a32aef6bd7791174e7fd23dcc6ea"
+                },
+                {
+                  "name": "IBET_MEMBERSHIP_EXCHANGE_CONTRACT_ADDRESS",
+                  "value": "0xaf8fe100fd35151edf6fdd7c17f46d4105ecefb2"
+                },
+                {
+                  "name": "IBET_SB_EXCHANGE_CONTRACT_ADDRESS",
+                  "value": "0x634c8d685f85212a611925c1c5b61f128d91148c"
+                },
+                {
+                  "name": "OMISE_PUBLIC",
+                  "value": "pkey_test_5dk6jbmlwp8lc419fl6"
+                },
+                {
+                  "name": "OMISE_SECRET",
+                  "value": "skey_test_5dk6jbmm6eecay4oplw"
+                },
+                {
+                  "name": "PERSONAL_INFO_CONTRACT_ADDRESS",
+                  "value": "0xaf364cdc05a134a28c74b0f5b66daaf4e04969fc"
+                },
+                {
+                  "name": "SNS_APPLICATION_ARN",
+                  "value": "arn:aws:sns:ap-northeast-1:164220784832:app/APNS/ibetDevDistribution"
+                },
+                {
+                  "name": "TOKEN_LIST_CONTRACT_ADDRESS",
+                  "value": "0x3502948677466087c9f7895ab5b3a029f95f5ac6"
+                },
+                {
+                  "name": "WEB3_HTTP_PROVIDER",
+                  "value": "http://internal-node-int-alb-63416238.ap-northeast-1.elb.amazonaws.com:8545"
+                },
+                {
+                  "name": "WHITE_LIST_CONTRACT_ADDRESS",
+                  "value": "0x17f39775a30a5701dbcc2714a8047b1b36e8f0c9"
+                },
+                {
+                  "name": "WORKER_COUNT",
+                  "value": "8"
+                }
+              ],
+            "memoryReservation": 1024,
+            "essential": true,
+            "mountPoints": [],
+            "entryPoint": [
+                  "/app/tmr-node/run_Notifications.sh"
+            ],
+            "dockerLabels": {
+                "Name": "notification_nodev2_1"
+              },
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                  "awslogs-group": "/ecs/nodev2_1",
+                  "awslogs-region": "ap-northeast-1",
+                  "awslogs-stream-prefix": "ecs"
+                }
+            }
+        }
+    ],
+    "requiresCompatibilities": [
+        "EC2"
+    ]
+}
