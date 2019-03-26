@@ -1,0 +1,100 @@
+{
+  "family": "bankv2_1",
+  "executionRoleArn": "arn:aws:iam::164220784832:role/executionTaskForECS",
+  "containerDefinitions": [
+      {
+          "name": "bank",
+          "image": "257258793156.dkr.ecr.ap-northeast-1.amazonaws.com/tmr-bank:v0.5.2",
+          "cpu": 0,
+          "secrets": [
+            {
+              "valueFrom": "bank_DATABASE_URL",
+              "name": "DATABASE_URL"
+            },
+            {
+              "valueFrom": "bank_ETH_ACCOUNT_PASSWORD",
+              "name": "ETH_ACCOUNT_PASSWORD"
+            },
+            {
+              "valueFrom": "bank_RSA_PASSWORD",
+              "name": "RSA_PASSWORD"
+            }
+            ],           
+          "environment": [
+            {
+              "name": "AGENT_ADDRESS",
+              "value": "0x263c201c5e4c5a4cbf9adc81f81f7c67408755e5"
+            },
+            {
+              "name": "ETH_ACCOUNT",
+              "value": "0x263c201c5e4c5a4cbf9adc81f81f7c67408755e5"
+            },
+            {
+              "name": "FLASK_CONFIG",
+              "value": "production"
+            },
+            {
+              "name": "IBET_SB_EXCHANGE_CONTRACT_ADDRESS",
+              "value": "0x634c8d685f85212a611925c1c5b61f128d91148c"
+            },
+            {
+              "name": "PERSONAL_INFO_CONTRACT_ADDRESS",
+              "value": "0xaf364cdc05a134a28c74b0f5b66daaf4e04969fc"
+            },
+            {
+              "name": "IBET_CP_EXCHANGE_CONTRACT_ADDRESS",
+              "value": "0xc6daf0cf72f1a32aef6bd7791174e7fd23dcc6ea"
+            },
+            {
+              "name": "IBET_MEMBERSHIP_EXCHANGE_CONTRACT_ADDRESS",
+              "value": "0xaf8fe100fd35151edf6fdd7c17f46d4105ecefb2"
+            },
+            {
+              "name": "WEB3_HTTP_PROVIDER",
+              "value": "http://internal-bank-int-alb-132492133.ap-northeast-1.elb.amazonaws.com:8545"
+            },
+            {
+              "name": "WHITE_LIST_CONTRACT_ADDRESS",
+              "value": "0x17f39775a30a5701dbcc2714a8047b1b36e8f0c9"
+            }
+              ],
+          "memoryReservation": 1024,
+          "portMappings": [
+              {
+                "hostPort": 80,
+                "protocol": "tcp",
+                "containerPort": 5000
+                }
+          ],
+          "essential": true,
+          "mountPoints": [
+              {
+                "containerPath": "/app/tmr-bank/data/rsa",
+                "sourceVolume": "bank_vol"         
+                  }
+          ],
+          "dockerLabels": {
+              "Name": "docker_bank"
+          },
+          "logConfiguration": {
+              "logDriver": "awslogs",
+              "options": {
+                "awslogs-group": "/ecs/bankv2_1",
+                "awslogs-region": "ap-northeast-1",
+                "awslogs-stream-prefix": "ecs"
+                }
+          }
+      }
+  ],
+  "requiresCompatibilities": [
+      "EC2"
+  ],
+  "volumes": [
+      {
+          "name": "bank_vol",
+          "host": {
+              "sourcePath": "/home/ubuntu/tmr-docker/bank/data/rsa"
+          }
+      }
+  ]
+}
