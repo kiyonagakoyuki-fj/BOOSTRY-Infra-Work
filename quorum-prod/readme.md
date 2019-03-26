@@ -15,11 +15,40 @@
 
 
 ### 1.1. node-api
-![](./docs/system_overview_v2.png)
+![](./docs/apinode_overview_v2.png)
 
 
-- プロダクション、ステージング用２種類のAWSアカウントが存在する。  
+- iOSアプリ(Wallet)から接続を受け付けるためのクラスタ    
+- WAF/Shield、外部ALB、Nginx Proxy、内部ALB、APコンテナ、RDS、SQS、SNS、S3、FireBaseを組み合わせて構成される    
 
+
+#### 1.1.1 WAF/Shield
+- 外部からの不正侵入を抑止するために設置    
+- 日本国外からのIPアドレスからのアクセス抑止、単位時間あたりの同一IPからの連続アクセス抑止、SQLインジェクション抑止フィルタを実装    
+- 外部ALBにアドインしている    
+
+
+#### 1.1.2 外部ALB
+- nginxを冗長構成するため、かつ、HTTPS→HTTPへ復号化を実施するためにPlublicネットワーク上に設置    
+- ドメインはRoute53に格納したNVCのドメイン(api.ibet.jp)を利用  
+- 証明書はACMにて作成したAmazon作成の証明書を適用    
+- Port443でListenしたものを後ろのnginx Proxyの80番ポートにフォワーディング 
+- 背後のnginx proxyが全滅して処理を返せない場合、503エラーとステータスコード999を返却(要確認) 
+- アクセスログはS3上に格納している  
+
+
+#### 1.1.3 nginx Proxy
+- DMZに配置し、basic認証機能を搭載することでアクセス制御を実装    
+- ECSクラスタ上で可動する  
+- AWSのALBが定期的にIPアドレスが変わるため、定期的にキャッシュしたDNSを再読込する機能を実装している  
+- ログはCloudwatch logsに出力。    
+
+
+#### 1.1.4 内部ALB
+- APコンテナ、Quorumコンテナを冗長化するために、Privateネットワーク上に設置    
+- Port80でListenしたものを後ろのAPコンテナの5000番ポートにフォワーディング 
+- Port80でListenしたものを後ろのQuorumコンテナの8443番ポートにフォワーディング 
+- ログはCloudwatch logsに出力。    
 
 
 ### 1.2. satoshi
