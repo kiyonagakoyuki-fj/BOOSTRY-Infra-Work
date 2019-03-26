@@ -1,0 +1,57 @@
+{
+    "family": "satoshi_quorum4",
+    "containerDefinitions": [
+        {
+            "name": "satoshi_quorum4",
+            "image": "257258793156.dkr.ecr.ap-northeast-1.amazonaws.com/quorum:no_memory_leak2",
+            "cpu": 0,
+            "environment": [
+                {
+                  "name": "nodekeyhex",
+                  "value": "4e99d523301abb1ea3a9a1265acb46f0f703e26c7ceff3d4e527fcfd8b20cecb"
+                }
+              ],            "memoryReservation": 1024,
+            "portMappings": [
+                {
+                    "containerPort": 30303,
+                    "hostPort": 30303,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 8545,
+                    "hostPort": 8545,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "mountPoints": [
+                {
+                    "sourceVolume": "quorum_vol",
+                    "containerPath": "/eth"
+                }
+            ],
+            "dockerLabels": {
+                "Name": "docker_satoshi_quorum1"
+            },
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/satoshi_quorum4",
+                    "awslogs-region": "ap-northeast-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
+        }
+    ],
+    "volumes": [
+        {
+            "name": "quorum_vol",
+            "host": {
+                "sourcePath": "/home/ubuntu/quorum_data/v4"
+            }
+        }
+    ],
+    "requiresCompatibilities": [
+        "EC2"
+    ]
+}
