@@ -1,5 +1,6 @@
 # Production用の定義とインストール、設定の仕方
-## 1. 【全体構成】
+## 1. 【全体構成】  
+![](./docs/system_overview_v2.png)
 ### 1.1. node-api
 * ここに特徴など。
 * メモメモ
