@@ -1,0 +1,49 @@
+{
+  "family": "bank_postgres",
+  "networkMode": "awsvpc",
+  "containerDefinitions": [
+      {
+          "name": "postgres",
+          "image": "postgres:9.6",
+          "cpu": 0,
+          "environment": [],           
+          "memoryReservation": 1024,
+          "portMappings": [
+              {
+                  "containerPort": 5432,
+                  "hostPort": 5432,
+                  "protocol": "tcp"
+              }
+          ],
+          "essential": true,
+          "mountPoints": [
+              {
+                "containerPath": "/var/lib/postgresql/data",
+                "sourceVolume": "postgres"
+              }
+          ],
+          "dockerLabels": {
+              "Name": "docker_bank_postgres"
+          },
+          "logConfiguration": {
+              "logDriver": "awslogs",
+              "options": {
+                "awslogs-group": "/ecs/bank_postgres",
+                "awslogs-region": "ap-northeast-1",
+                "awslogs-stream-prefix": "ecs"
+              }
+          }
+      }
+  ],
+  "volumes": [
+      {
+          "name": "postgres",
+          "host": {
+              "sourcePath": "/home/ubuntu/postgresql_data"
+          }
+      }
+  ],
+  "requiresCompatibilities": [
+      "EC2"
+  ]
+}
