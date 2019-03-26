@@ -1,0 +1,67 @@
+{
+    "family": "node_quorum2",
+    "containerDefinitions": [
+        {
+            "name": "node_quorum2",
+            "image": "257258793156.dkr.ecr.ap-northeast-1.amazonaws.com/quorum:general",
+            "cpu": 0,
+            "environment": [
+                {
+                  "name": "nodekeyhex",
+                  "value": "685d768922e3be4dc11b001be6278faf42f71b66c7cba6f604b36901eebbfcff"
+                }
+              ],            "memoryReservation": 524,
+            "portMappings": [
+                {
+                    "containerPort": 8545,
+                    "hostPort": 9545,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 30303,
+                    "hostPort": 31303,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 30303,
+                    "hostPort": 31303,
+                    "protocol": "udp"
+                },
+                {
+                    "containerPort": 30304,
+                    "hostPort": 31304,
+                    "protocol": "udp"
+                }
+            ],
+            "essential": true,
+            "mountPoints": [
+                {
+                    "sourceVolume": "quorum1_vol2",
+                    "containerPath": "/eth"
+                }
+            ],
+            "dockerLabels": {
+                "Name": "node_quorum2"
+            },
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/node_quorum2",
+                    "awslogs-region": "ap-northeast-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
+        }
+    ],
+    "volumes": [
+        {
+            "name": "quorum1_vol2",
+            "host": {
+                "sourcePath": "/home/ubuntu/quorum_data/v2"
+            }
+        }
+    ],
+    "requiresCompatibilities": [
+        "EC2"
+    ]
+}
