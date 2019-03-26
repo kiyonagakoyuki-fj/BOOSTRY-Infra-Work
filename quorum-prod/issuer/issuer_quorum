@@ -1,0 +1,57 @@
+{
+  "family": "issuer_quorum",
+  "containerDefinitions": [
+      {
+          "name": "quorum",
+          "image": "257258793156.dkr.ecr.ap-northeast-1.amazonaws.com/quorum:general",
+          "cpu": 0,
+          "environment": [
+              {
+                "name": "nodekeyhex",
+                "value": "05f1672da7f30b8d5973b0248a1e4f871f1c91afcf381b69489e314f59073192"
+              }
+            ],            "memoryReservation": 1024,
+          "portMappings": [
+              {
+                  "containerPort": 30303,
+                  "hostPort": 30303,
+                  "protocol": "tcp"
+              },
+              {
+                  "containerPort": 8545,
+                  "hostPort": 8545,
+                  "protocol": "tcp"
+              }
+          ],
+          "essential": true,
+          "mountPoints": [
+              {
+                "containerPath": "/eth",
+                "sourceVolume": "quorum_vol_vol_v1"
+              }
+          ],
+          "dockerLabels": {
+              "Name": "issuer_quorum_docker"
+          },
+          "logConfiguration": {
+              "logDriver": "awslogs",
+              "options": {
+                "awslogs-group": "/ecs/issuer_quorum",
+                "awslogs-region": "ap-northeast-1",
+                "awslogs-stream-prefix": "ecs"
+              }
+          }
+      }
+  ],
+  "volumes": [
+      {
+          "name": "quorum_vol_vol_v1",
+          "host": {
+              "sourcePath": "/home/ubuntu/quorum_data/v1"
+          }
+      }
+  ],
+  "requiresCompatibilities": [
+      "EC2"
+  ]
+}
