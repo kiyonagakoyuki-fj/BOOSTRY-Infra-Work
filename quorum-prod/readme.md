@@ -101,8 +101,23 @@
 
 
 ### 1.2. satoshi
-* ここに特徴など。
-* メモメモ
+![](./docs/satoshi_overview_v2.png)
+
+
+- コミュニティが利用するValicatorを可動させるためのクラスタ    
+- ECS上でValidatorとして設定されたQuorumコンテナが4つ稼働している    
+  
+  
+#### 1.2.1 Quorumコンテナ
+- Privateネットワーク上に配置    
+- ECSクラスタ上で可動する  
+- ValidatorとしてBuildされたQuorumコンテナに、Istanbul toolsで発行したキーを付与している  
+- ホストEC2上の/home/ubuntu/quorum_data/v[1-4]配下をECSのコンテナからマウントして利用している  
+- static-nodes.json,genesis.jsonを配置  
+- ログはCloudwatch logsに出力。    
+
+
+
 ### 1.3. issuer
 * ここに特徴など。
 * メモメモ
