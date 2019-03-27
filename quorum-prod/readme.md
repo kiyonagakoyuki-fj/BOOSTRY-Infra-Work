@@ -390,19 +390,234 @@ docker exec -ti (quorumのdocker process id) geth attach /eth/geth.ipc
 
 
 ### 2.2. リリース方式  
-### 2.3. 監視・通知方式  
-### 2.4. リブート方式  
-### 2.5. 拡張方式  
-### 2.6. Push通知方式  
-### 2.7. メッセージ非同期連携方式  
-### 2.8. キャッシュ方式  
-### 2.9. バックアップ/リストア方式  
-### 2.3. 秘密鍵作成方式
+コンテナ、スマートコントラクト、ホワイトリスト、秘密鍵、テーブルデータのリリースを行う必要がある  
+ここでは、インフラチームが担当しているコンテナ、スマートコントラクト、秘密鍵、ユーザアカウントのリリース方法を記載する  
+
+### 2.1.1. コンテナリリース  
+各コンテナは、アプリケーションチームが開発環境にてテストしたものを、ECRに登録、TAGを切ってくれる  
+リリースを行う対象コンテナのTAG番号を受領した後、対象のタスク定義を変更。  
+Jenkinsにタスク定義を読み込ませ、リリースを行う  
+
+### 2.2.1. スマートコントラクト、トークンリリース  
+スマートコントラクト、トークンのリリースをは下記の対応が必要となる。  
+
+
+- スマートコントラクトの場合  
+アプリチームがスマートコントラクトのTAGを教えてくれるため、  
+TAGを入手後、Dockerを利用してSATOSHIクラスタのEC2上にて、コンパイルからDeployまでを実施する。  
 ```
-手順、コマンドを書く
+docker pull 257258793156.dkr.ecr.ap-northeast-1.amazonaws.com/tmr-sc:v0.5.1
+docker run --rm --link ecs-satoshi_quorum1-6-satoshiquorum1-fad5dadff2d1cce70f00:quorum -e ETH_ACCOUNT_PASSWORD=nvillage201803+ def390d69be6 /app/tmr-sc/deploy/deploy.sh
+[ec2-user@ip-30-0-11-184 ~]$ docker run --rm --link ecs-satoshi_quorum1-6-satoshiquorum1-fad5dadff2d1cce70f00:quorum -e ETH_ACCOUNT_PASSWORD=nvillage201803+ def390d69be6 /app/tmr-sc/deploy/deploy.sh
+> Found 13 contract source files
+  - contracts/ContractReceiver.sol
+  - contracts/IbetCoupon.sol
+  - contracts/IbetCouponExchange.sol
+  - contracts/IbetMembership.sol
+  - contracts/IbetMembershipExchange.sol
+  - contracts/IbetStandardTokenInterface.sol
+  - contracts/IbetStraightBond.sol
+  - contracts/IbetStraightBondExchange.sol
+  - contracts/Ownable.sol
+  - contracts/PersonalInfo.sol
+  - contracts/SafeMath.sol
+  - contracts/TokenList.sol
+  - contracts/WhiteList.sol
+> Compiled 13 contracts
+  - contracts/ContractReceiver.sol:ContractReceiver
+  - contracts/IbetCoupon.sol:IbetCoupon
+  - contracts/IbetCouponExchange.sol:IbetCouponExchange
+  - contracts/IbetMembership.sol:IbetMembership
+  - contracts/IbetMembershipExchange.sol:IbetMembershipExchange
+  - contracts/IbetStandardTokenInterface.sol:IbetStandardTokenInterface
+  - contracts/IbetStraightBond.sol:IbetStraightBond
+  - contracts/IbetStraightBondExchange.sol:IbetStraightBondExchange
+  - contracts/Ownable.sol:Ownable
+  - contracts/PersonalInfo.sol:PersonalInfo
+  - contracts/SafeMath.sol:SafeMath
+  - contracts/TokenList.sol:TokenList
+  - contracts/WhiteList.sol:WhiteList
+> Wrote compiled assets to: build/contracts.json
+TokenList : 0x21644d260bc017257b5f3c5b692c5c3cdf6e10d1
+PersonalInfo : 0xd1da245c2f611d23301be0e9a79c218524c77e69
+WhiteList : 0x1f5533cf9d0365b040da3e5d2b0e58b6a7ad02be
+IbetStraightBondExchange : 0x8fe5100e2b759be60f3cebc9a6a1cf0f75385d49
+IbetCouponExchange : 0x92ea7ba0fd69f3b925274d5a6f0a62035e2c5f36
+IbetMembershipExchange : 0x7ce3d8d1461237a380b69ac54fe1d020075b252c
+```
+
+生成したスマートコントラクトのアドレス入手後、アドレスを下記URLに登録し、BIP155形式に変更
+```
+https://ethsum.netlify.com/
+```
+変換後のアドレスをタスク定義の環境変数に追記。  
+更に、API NodeのDBにアクセスを行い、実行可能コントラクトの登録を行う。
+```
+apluser=> select * from executable_contract;
+ created | modified | id |              contract_address
+---------+----------+----+--------------------------------------------
+         |          |  1 | 0xC6dAf0cf72F1a32aeF6bD7791174E7fD23dCc6Ea
+         |          |  2 | 0xAF8Fe100fD35151EdF6fDd7C17f46d4105eCeFb2
+         |          |  3 | 0x634C8D685F85212a611925c1C5b61f128D91148C
+         |          |  4 | 0x17F39775a30A5701DbCc2714a8047b1B36e8F0c9
+         |          |  5 | 0xaF364CDC05A134a28C74b0f5B66daaf4e04969Fc
+         |          |  6 | 0x502c50C861F64Fa9D35e2aAc2c5Db92d246a2aE5
+         |          |  7 | 0x2dF626329CEaF8f1735067EdA0c3715b74341e96
+(7 rows)
+
+apluser=> select * from listing;
+ created | modified | id |               token_address                | credit_card_availability | bank_payment_a
+vailability
+---------+----------+----+--------------------------------------------+--------------------------+---------------
+------------
+         |          |  1 | 0x502c50C861F64Fa9D35e2aAc2c5Db92d246a2aE5 | t                        | t
+         |          |  2 | 0x2dF626329CEaF8f1735067EdA0c3715b74341e96 | t                        | t
+         |          |  4 | 0xf81B94AD2EEF66feaA4c71f4FedB52a7D173c9Fa | t                        | t
+         |          |  5 | 0xEe6809A8A9b801Df2044415C3723bA010A368967 | t                        | t
+         |          |  6 | 0xc5ef64113799a11f089fDf426Ae2f20A16d8c6b5 | t                        | t
+         |          |  7 | 0xbE44fF2b170959701C32C41613cb574383F43Aaa | t                        | t
+         |          |  8 | 0x1E26f7C61b11Ed0f125bd2A63f472175b68D0098 | t                        | t
+         |          |  9 | 0xbb79929a7bc6b915AF2a9eDc3FB34b5a36e155db | t                        | t
+         |          | 10 | 0xe729fA5893759163dDb73e0E609e941A51f10E7a | t                        | t
+         |          | 11 | 0x30E09348bf41457e088F9013130B9c34bDF511f5 | t                        | t
+(10 rows)
+
+apluser=> insert into listing(token_address , credit_card_availability, bank_payment_availability) values ('0x281535397238844178DABda208aC170bD1945478', True, True);
+INSERT 0 1
+apluser=> insert into executable_contract(contract_address) values ('0x281535397238844178DABda208aC170bD1945478');
+INSERT 0 1
+```
+
+
+- ユーザがトークンを発行した場合  
+トークン発行の連絡を受けた後、トークンのアドレスをIssuerアプリから入手後、アドレスを下記URLに登録し、BIP55形式に変更
+```
+https://ethsum.netlify.com/
+```
+API NodeのDBにアクセスを行い、上記実行可能コントラクトに加え、表示可能コントラクトの登録を行う。
+```
+insert into executable_contract(contract_address) values ('0x08fED8aa9c22Ca593DC0Fb251E5d8329018854Cc');
+```
+
+### 2.3.1. 秘密鍵リリース  
+Issuer及びBankは、秘密鍵を保持している  
+リリース対象のEC2にアクセスし、秘密鍵発行用のDockerをキックし、秘密鍵のリリースを実施する。
+```
+docker run --rm -v /home/ubuntu/tmr-issuer/data/rsa:/app/tmr-issuer/data/rsa/ e962506a8739 /app/tmr-issuer/rsa/run.sh passphrase
+```
+
+
+
+
+### 2.3. 監視・通知方式  
+監視は、各コンテナの標準出力をCloudwatchに出力することで行っている。   
+通知は、Cloudwatch logsのメトリクスを利用して検知し、SNSから通知を行っている  
+** あとで絵を書く… **  
+
+### 2.4. リブート方式  
+nginx Proxy は AWSが提供するALBのDNSが定期的に切り替わるため、定期的にリブートを行っている  
+リブートはコンテナにCronを埋め込むことで実現している。
+** あとで絵を書く… **  
+
+### 2.5. 拡張方式  
+クラスタ追加時の作業手順を記載する。
+- ECSのクラスタを構築
+- 外部ALB、内部ALBを作成
+- ALBのターゲットを作成する
+- ECSのサービス定義を作成、このとき、事前に作成していたターゲットを読み込み、自動振り分けを有効にする
+- Istanbul Toolsを利用してHash値を取得
+- accountを作成、アカウントロックを行う。
+- Quorum用のタスク定義にIstanbulが生成したHash値を登録
+- Validatorのstatic-nodes.jsonに追加するノード情報を登録して、Ethereumネットワークにノードを追加する
+- 必要なタスク定義を追加して起動する。
+- DBを利用する場合、DBの作成、マイグレーションを実施する(API Nodeのみ不要)
+```
+# DBコンテナに接続
+docker exec -it (dockerのProcess ID) psql -h postgres -U postgres
+
+# role, db作成
+postgres=# CREATE ROLE apluser LOGIN CREATEDB PASSWORD 'apluserpass';
+postgres=# CREATE DATABASE apldb OWNER apluser;
+postgres=# \l
+                                 List of databases
+   Name    |  Owner   | Encoding |  Collate   |   Ctype    |   Access privileges
+-----------+----------+----------+------------+------------+-----------------------
+ apldb     | apluser  | UTF8     | en_US.utf8 | en_US.utf8 |
+ postgres  | postgres | UTF8     | en_US.utf8 | en_US.utf8 |
+ template0 | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres          +
+           |          |          |            |            | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres          +
+           |          |          |            |            | postgres=CTc/postgres
+(4 rows)
+
+# issuerコンテナに接続
+docker exec -ti (dockerのprocess id) bash
+
+# ↓をコンテナ内で実施
+source ~/.bash_profile
+cd /app/tmr-issuer
+python manage.py db init
+python manage.py db migrate
+python manage.py db upgrade
+python manage.py shell
+
+# shellで実施
+roles = ['admin', 'user',]
+for r in roles:
+    role = Role.query.filter_by(name=r).first()
+    if role is None:
+        role = Role(name=r)
+    db.session.add(role)
+
+users = [
+     {'login_id': 'admin', 'user_name': '管理者', 'role_id': 1, 'password': 'admin'},
+]
+
+for u_dict in users:
+    user = User.query.filter_by(login_id=u_dict['login_id']).first()
+    if user is None:
+        user = User()
+        for key, value in u_dict.items():
+            setattr(user, key, value)
+        db.session.add(user)
+
+db.session.commit()
+
+```
+- 必要に応じて秘密鍵を生成する。
+
+
+### 2.9. バックアップ/リストア方式  
+下記を参照
+```
+https://n-village.atlassian.net/wiki/spaces/TMR/pages/223871017
 ```
 
 ## 3. 【その他メモ】  
 リスティング方式など、基盤処理ではないが把握しておく必要のある内容、メモを記載しておく
-### 3.1. リスティング、実行許可コントラクト指定方式  
-### 3.2. 鍵管理方式  
+### 3.1. リスティング、実行許可コントラクト指定方
+セキュリティ対策のため、登録されたトークンを表示するためにはリスティングDBへ登録と、実行可能コントラクトの登録が必要。  
+スマートコントラクトの場合は、実行可能コントラクトの登録のみ行う。  
+
+### 3.2. 鍵、証明書管理  
+SSH、秘密鍵、公開鍵等、鍵は、証券本部のコンフルエンスに格納してある  
+証明書やPPファイルも証券本部のコンフルエンスに格納してある。  
+利用時は必ずコンフルエンスから最新版を利用し、最新版が作成された場合、登録を行うこと。  
+
+### 2.3. Push通知方式  
+Push通知は2種類ある  
+- アプリケーション内部でPushする方式
+アプリケーション内部でPushするのはNotification用のプロセスの起動が必要  
+
+- iOSや、Androidの通知機能を利用する場合
+SNSを利用して、APFsやFirebaseのPush通知を利用できる  
+アプリチームから証明書をもらった後、SNSのアプリケーションを作成し、NodeAPIの環境変数にアプリケーションの情報を登録する 
+** 後ほど絵を追加しておく  **
+
+### 2.4. メッセージ非同期連携方式  
+BANKとAPI Nodeは約定を連携するためにSQSにて非同期連携を行っている。
+新しい環境を作る場合、SQSの設定が必要
+** 後ほど絵を追加しておく  **
+
+### 2.5. キャッシュ方式  
+DBにBCの内容をキャッシュしている。
