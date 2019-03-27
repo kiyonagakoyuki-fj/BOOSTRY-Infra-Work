@@ -258,6 +258,136 @@
 ## 2. 【運用】  
 運用に必要な情報を記載
 ### 2.1. アクセス方式  
+システムへのアクセス方式を記載する  
+  
+  
+### 2.1.1. HTTP(s)アクセス  
+API Node、Bank、Issuerには、HTTP(s)リクエスト経由でアクセス可能。
+### 2.1.1.1. API Nodeへのアクセス  
+インターネット経由にてアクセス可能  
+所定のURLにブラウザにてアクセス後、Basic認証にて認証を行うことでアクセス可能となる  
+URLはコンフルエンス上の環境情報を参照   
+  
+### 2.1.1.2. SATOSHIへのアクセス  
+SATOSHIへはHTTP経由でのアクセスは不可  
+
+
+### 2.1.1.3. Issuerへのアクセス  
+NRI Proxy及び、NVCからのみアクセス可能  
+所定のURLにブラウザにてアクセス後、Basic認証にて認証を行うことでアクセス可能となる  
+URLはコンフルエンス上の環境情報を参照   
+
+### 2.1.1.4. BANKへのアクセス  
+NRI Proxy及び、NVCからのみアクセス可能  
+所定のURLにブラウザにてアクセス後、Basic認証にて認証を行うことでアクセス可能となる  
+URLはコンフルエンス上の環境情報を参照   
+
+
+### 2.1.2. SSHアクセス  
+API Node、SATOSHI、Bank、Issuerには、SSH経由でアクセス可能。
+### 2.1.2.1. API Nodeへのアクセス  
+NRI ProxyからのみSSHにてアクセス可能 
+NRI Proxy→各クラスタのProxyに秘密鍵を用いてSSHログイン後  
+更にProxyからPrivate用EC2に秘密鍵を用いてアクセス可能となる  
+IPアドレス、秘密鍵はコンフルエンス上の環境情報を参照   
+  
+
+### 2.1.2.2. SATOSHIへのアクセス  
+NRI ProxyからのみSSHにてアクセス可能 
+NRI Proxy→各クラスタのProxyに秘密鍵を用いてSSHログイン後  
+更にProxyからPrivate用EC2に秘密鍵を用いてアクセス可能となる  
+IPアドレス、秘密鍵はコンフルエンス上の環境情報を参照   
+  
+
+
+### 2.1.2.3. Issuerへのアクセス  
+NRI ProxyからのみSSHにてアクセス可能 
+NRI Proxy→各クラスタのProxyに秘密鍵を用いてSSHログイン後  
+更にProxyからPrivate用EC2に秘密鍵を用いてアクセス可能となる  
+IPアドレス、秘密鍵はコンフルエンス上の環境情報を参照   
+  
+### 2.1.2.4. BANKへのアクセス  
+NRI ProxyからのみSSHにてアクセス可能 
+NRI Proxy→各クラスタのProxyに秘密鍵を用いてSSHログイン後  
+更にProxyからPrivate用EC2に秘密鍵を用いてアクセス可能となる  
+IPアドレス、秘密鍵はコンフルエンス上の環境情報を参照   
+  
+
+### 2.1.3. psqlアクセス  
+API Node、Bank、IssuerクラスタのRDS/DBコンテナにはpsqlを利用してアクセスを行う。
+
+
+### 2.1.3.1. API Nodeクラスタ上のRDSへのアクセス  
+Private上のAPI Noode EC2にアクセス後、下記コマンドにてアクセス  
+プロダクションとステージングでDB名が異なるため注意
+プロダクション:postgres ステージング:apldb
+
+- プロダクションアクセス例
+```
+[ec2-user@ip-20-0-10-49 ~]$ ssh -i .ssh/ibet_stg_private.pem ec2-user@20.0.11.29
+Last login: Thu Mar  7 06:28:11 2019 from ip-20-0-10-49.ap-northeast-1.compute.internal
+
+   __|  __|  __|
+   _|  (   \__ \   Amazon ECS-Optimized Amazon Linux AMI 2018.03.m
+ ____|\___|____/
+
+For documentation, visit http://aws.amazon.com/documentation/ecs
+[ec2-user@ip-20-0-11-29 ~]$ psql -h apluser.crfopur0vgmv.ap-northeast-1.rds.amazonaws.com -U apluser -d postgres
+Password for user apluser:
+psql (9.2.24, server 10.4)
+WARNING: psql version 9.2, server version 10.0.
+         Some psql features might not work.
+SSL connection (cipher: ECDHE-RSA-AES256-GCM-SHA384, bits: 256)
+Type "help" for help.
+
+postgres=>
+```
+
+
+### 2.1.3.2. SATOSHIへのアクセス  
+SATOSHIはDBが存在しないためアクセス不可
+
+
+
+### 2.1.3.3. Issuerへのアクセス  
+Private上のIssuer EC2にアクセス後、下記コマンドにてアクセス  
+```
+docker exec -ti (docker process の ID) psql -h postgres -U postgres  
+```
+
+
+### 2.1.3.4. BANKへのアクセス  
+Private上のBank EC2にアクセス後、下記コマンドにてアクセス  
+  docker exec -ti (docker process の ID) psql -h postgres -U postgres  
+
+  
+### 2.1.4. Quroumアクセス  
+API Node、Issuer、BANK、SATOSHI上のQuorumには、Geth経由でアクセス可能。
+### 2.1.4.1. API Nodeへのアクセス  
+Private上のIssuer EC2にアクセス後、下記コマンドにてアクセス  
+```
+docker exec -ti (quorumのdocker process id) geth attach /eth/geth.ipc 
+```
+### 2.1.4.2. SATOSHIへのアクセス  
+Private上のSATOSHI EC2にアクセス後、下記コマンドにてアクセス  
+```
+docker exec -ti (quorumのdocker process id) geth attach /eth/geth.ipc 
+```
+
+
+### 2.1.4.3. Issuerへのアクセス  
+Private上のIssuer EC2にアクセス後、下記コマンドにてアクセス  
+```
+docker exec -ti (quorumのdocker process id) geth attach /eth/geth.ipc 
+```
+
+### 2.1.4.4. BANKへのアクセス  
+Private上のBANK EC2にアクセス後、下記コマンドにてアクセス  
+```
+docker exec -ti (quorumのdocker process id) geth attach /eth/geth.ipc 
+```
+
+
 
 ### 2.2. リリース方式  
 ### 2.3. 監視・通知方式  
