@@ -524,7 +524,7 @@ docker run --rm -v /home/ubuntu/tmr-issuer/data/rsa:/app/tmr-issuer/data/rsa/ e9
 ![](./docs/ext_kanshi.png)
 一気通貫にシステムステータスを確認するため、外形監視を実施する。  
 監視対象のURLはKMSを利用してLambdaの環境変数に暗号化した状態で配置しておく。アドレスは必ず存在するアドレスを使う。  
-Lambdaファンクションから定期的にリクエストを送信。受信したAPIは秘密鍵、S3のリストにアクセスした後、結果を返却  
+Lambdaファンクションから5分間隔でリクエストを送信。受信したAPIは秘密鍵、S3のリストにアクセスした後、結果を返却  
 Lambdaファンクションで戻り値を確認し、200以外の場合Cloudwatchにerrorを出力  
 Alarmでエラーが来た場合、通知を行う。
 
