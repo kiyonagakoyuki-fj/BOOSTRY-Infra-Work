@@ -513,6 +513,18 @@ docker run --rm -v /home/ubuntu/tmr-issuer/data/rsa:/app/tmr-issuer/data/rsa/ e9
 監視は、各コンテナの標準出力をCloudwatchに出力することで行っている。   
 通知は、Cloudwatch logsのメトリクスを利用して検知し、SNSから通知を行っている  
 ** あとで絵を書く… **  
+  
+  
+  
+  
+  
+- 外形監視方式
+![](./docs/ext_kanshi.png.png)
+一気通貫にシステムステータスを確認するため、外形監視を実施する。  
+監視対象のURLはKMSを利用してLambdaの環境変数に暗号化した状態で配置しておく。アドレスは必ず存在するアドレスを使う。  
+Lambdaファンクションから定期的にリクエストを送信。受信したAPIは秘密鍵、S3のリストにアクセスした後、結果を返却  
+Lambdaファンクションで戻り値を確認し、200以外の場合Cloudwatchにerrorを出力  
+Alarmでエラーが来た場合、通知を行う。
 
 ### 2.4. リブート方式  
 nginx Proxy は AWSが提供するALBのDNSが定期的に切り替わるため、定期的にリブートを行っている  
