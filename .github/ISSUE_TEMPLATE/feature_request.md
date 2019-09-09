@@ -2,8 +2,8 @@
 name: Feature request
 about: 改善提案
 title: "[FEATURE]"
-labels: feature
-assignees: YoshihitoAso, hagishun
+labels: draft, feature
+assignees: hagishun, YoshihitoAso
 
 ---
 
