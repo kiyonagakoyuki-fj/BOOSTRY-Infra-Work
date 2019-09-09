@@ -3,7 +3,7 @@ name: Bug report
 about: バグに関するレポート
 title: "[BUG]"
 labels: bug
-assignees: YoshihitoAso, hagishun, h-horiuchi
+assignees: YoshihitoAso, hagishun
 
 ---
 

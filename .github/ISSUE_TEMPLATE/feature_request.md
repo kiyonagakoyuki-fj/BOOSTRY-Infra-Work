@@ -3,7 +3,7 @@ name: Feature request
 about: 改善提案
 title: "[FEATURE]"
 labels: feature
-assignees: YoshihitoAso, hagishun, h-horiuchi
+assignees: YoshihitoAso, hagishun
 
 ---
 
