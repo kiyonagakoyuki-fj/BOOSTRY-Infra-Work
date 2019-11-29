@@ -1,12 +1,12 @@
 FROM nginx
 
+ADD ./nginx.conf /etc/nginx/nginx.conf
 ADD ./app.conf /etc/nginx/conf.d/app.conf
-ADD ./keys/server.crt /etc/nginx/server.crt
-ADD ./keys/server.key /etc/nginx/server.key
+ADD ./index.html /etc/nginx/html/index.html
 ADD ./auth.htpasswd /etc/nginx/auth.htpasswd
+ADD ./start.sh /start.sh
 
 RUN chmod 755 -R /var
-RUN chmod 400 /etc/nginx/server.key
 
-EXPOSE 443
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 80
+CMD ["/start.sh"]
